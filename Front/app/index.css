@@ -12,11 +12,12 @@ html, body, #app{
 .bg-blue{
     background-color: #66dac7;
 }
+
 .bg-gray{
     background-color: #2e4158;
 }
 .blue-gray{
-    color : #2e4158;
+    color : #3c80d3;
 }
 .light-blue{
     color: #66dac7;
@@ -135,5 +136,61 @@ input{
     }
 }
 
+/***main****/
 
+.flex-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin : 0;
+}
+ul{
+    padding:0px;
+}
+
+li{
+    padding :0px;
+    list-style-type: none;
+    text-align: center;
+}
+
+.grid-li{
+   margin: 20px;
+   border: #2e4158 solid 2px;
+}
+.image-grid{
+    height: 22vh;
+    width: 18vh;
+}
+.grid{
+    display: flex;
+    flex-wrap: wrap;
+}
+.space-aroud{
+    justify-content: space-around
+}
   
+
+/***filterbar***/
+.label{
+    width: 300px;
+    margin :0px;
+    padding : 0px;
+    position: relative;
+}
+.options{
+    margin-left : 5px;
+}
+.ageInput{
+   outline:none; 
+   -webkit-appearance: none;
+   border : none;
+   background-color: #ffefd5;
+   width: 6vh;
+   text-align: center;
+}
+
+/******range  slider ****/
+#double2{
+    margin-top : 10px;
+}

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import {SignInForm, SignUpForm} from './SignForms'
 import '../index.css'
+import Axios from 'axios';
 import {Switch, NavLink, Link, Route} from 'react-router-dom'
+import { API_URL } from '../config'
 
 const activeStyle = {
     backgroundColor : '#66dac7'
@@ -9,18 +11,25 @@ const activeStyle = {
 
 
 //if the perple logined in then let it enter in the main page
-function AppLeft(props){
+class AppLeft extends Component{
+    state = {
+        loading : true
+    }
+    render(){
     return(
         <React.Fragment>
             <div className="col-sm-6 bg-blue whiteLetters">
                 <div className='heartAnimation'>
                   <div className='heart'></div>
                 </div>
-                {props.valideSignup && <div> check your email </div> }
-                {props.valideSignup && <Link to = '/photo' className='whiteLetters'>continue your register</Link>}
+                {this.state.loading ===false &&  <div>{this.state.homepage}</div>}
+               
+                {this.props.valideSignup && <div> check your email </div> }
+                {this.props.valideSignup && <Link to = '/photo' className='whiteLetters'>continue your register</Link>}
             </div>
         </React.Fragment>
     )
+    }
 }
 
 function NavBar(){
@@ -42,15 +51,14 @@ function NavBar(){
     )
 }
 
+
 function AppRight(props){
     return(
     <div className="col-sm-6 bg-gray">
         <div className = 'form-container whiteLetters'>
             <NavBar/>
-            <Switch>
-                <Route exact path='/' render = {(p)=> <SignUpForm {...p} signedup = {props.statehandler}/>}/>
-                <Route path='/signin' component = {SignInForm}/>
-            </Switch>
+            <Route exact path='/' render = {(p)=> <SignUpForm {...p} signedup = {props.statehandler}/>}/>
+            <Route path='/signin' component = {SignInForm}/>
         </div>
     </div>
     )
@@ -58,8 +66,7 @@ function AppRight(props){
 
 export default class Register extends Component {
     state = {
-        //signup : false
-        signup : true
+        signup : false
     }
     statehandler = ()=>{
         this.setState({signup : true})

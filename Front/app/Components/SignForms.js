@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { API_URL } from '../config'
 import Axios from 'axios';
+import {Redirect} from 'react-router-dom'
 //check the signup information...
 
 const valideEmailRegex = RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
@@ -69,7 +71,6 @@ export class SignUpForm extends Component {
         switch(name){
             case 'username' :
                 error.username = valideUsername(value)
-                
             break;
             case 'email' :
                 error.email = valideEmailRegex.test(value) 
@@ -100,7 +101,7 @@ export class SignUpForm extends Component {
         }
         let empty = emptyInput(content)
         if(valideForm(error) && empty === false){
-           // this.callbackApi()
+            this.sendEmailApi()
             signedup()
             console.log('valide')
         }else{
@@ -108,18 +109,19 @@ export class SignUpForm extends Component {
            // console.log(error)
         }
     }
-    callbackApi = async()=>{
-        let res = await Axios.post('http://localhost:5000/api/', this.state)
+    sendEmailApi = async()=>{
+        var authOption = {
+            method: 'POST',
+            url : `${API_URL}/signup`,
+            headers:{'content-type': 'application/json'},
+            data : this.state,
+            //withCredential and send headers will enable the cookie
+            withCredentials: true
+        }
+        //let res = await Axios.post('http://localhost:5000/api/', this.state)
+        let res = await Axios(authOption)
     }
     render(){
-      //  <SignupConsumer>
-    //    {({signup})=>(
-    //        signup
-    //        ? <Link to='/signin'>Sign Up</Link>  
-    //        : 'Sign Up')
-    //    }
-//
-    //</SignupConsumer>
         let {error} = this.state
         return(
             <div className = 'FormContainer'>
@@ -192,8 +194,29 @@ export class SignUpForm extends Component {
 export class SignInForm extends Component {
     state = {
         email : '',
-        passwd : '',
+        password : '',
         signup : 'false',
+        verified : false,
+        homepage : '',
+        loading : true
+    }
+    componentDidMount(){
+        var authOption = {
+            method: 'GET',
+            url : `${API_URL}/signin`,
+            headers:{'content-type': 'application/json'},
+            //withCredential and send headers will enable the cookie
+            withCredentials: true
+        }
+        let homepage = Axios(authOption)
+        homepage.then((res)=>{
+            console.log(res)
+            homepage = res.data
+            this.setState({
+                homepage,
+                loading : false
+            })
+        })
     }
     handleChange = (e)=>{
         let target = e.target
@@ -206,11 +229,25 @@ export class SignInForm extends Component {
     handleSubmit = async(e)=>{
         e.preventDefault()
         console.log(this.state)
-        let res = await Axios.post('http://localhost:5000/api/', this.state)
+        var authOption = {
+            method: 'POST',
+            url : `${API_URL}/signin`,
+            headers:{'content-type': 'application/json'},
+            data: this.state,
+            //withCredential and send headers will enable the cookie
+            withCredentials: true
+        }
+        let resp = await Axios(authOption)
+        let backMessage = resp.data
+        if(backMessage === 'verified')
+        this.setState({verified : true})
     }
     render(){
-
+        console.log(this.state.verified)
         return(
+            <div>
+            {this.state.verified && <Redirect to = '/test'/>}
+             <div>
             <div className = 'FormContainer'>
                 <form className = 'FormeFields' onSubmit = {this.handleSubmit}>
                     <div className = 'FormeField flex-colum'>
@@ -229,8 +266,8 @@ export class SignInForm extends Component {
                         <label htmlFor='passwd' className='whiteLetters'>Password</label>
                         <input
                             type = 'text'
-                            id = 'passwd'
-                            name = 'passwd'
+                            id = 'password'
+                            name = 'password'
                             placeholder = 'create your password'
                             //very react way to handle the formulaire
                             value = {this.state.passwd}
@@ -243,6 +280,8 @@ export class SignInForm extends Component {
                     </div>
                 </form>
             </div>
+            </div>
+        </div>
         )
     }
 }
