@@ -1,12 +1,9 @@
 const randomstring = require('randomstring')
-const bcrypt = require('bcrypt')
 const sendMail = require('./sendEmail').sendMail
 const mailTemplate = require('./email_template')
 const {SERVER_EMAIL} = require('./sendEmail')
 const pool = require('../config/pool')
-const until = require('util')
-
-pool.query = until.promisify(pool.query)
+const hashpass = require('../utilites/hashpass').hashpass
 
 async function addNewUser(data){
     try{
@@ -15,22 +12,33 @@ async function addNewUser(data){
         console.log(info)
         console.log('data sended out')
     }catch(err){
-        console.log(err)
+        console.log(`Error in addNewUser ${err}`)
     }
 }
 
-var hashpass = async (pass) => {
+async function DBfindByEmail(email){
     try{
-        let hash = await bcrypt.hash(pass, 10);
-        return hash;
+        let data = await pool.query('SELECT id, email, password, tocken FROM logins WHERE email= ?', [email])
+        return data
+    }catch(err){
+        console.log(err)
+    }
+}
+async function test_auth(id){
+    try{
+        let data = await pool.query('SELECT id, email, password FROM logins WHERE id= ?', [id])
+        return data
     }catch(err){
         console.log(err)
     }
 }
 
-const sendLoginToDB = (req, res)=>{
+
+
+const signUp = (req, res)=>{
+    console.log('inside the signUp.js')
         res.header("Access-Control-Allow-Origin", "http://localhost:8081")
-        let {username,email,passwd, confPasswd} = req.body
+        let {username,email,passwd} = req.body
         //we can do another server input security check again like in frontend
         let tocken = randomstring.generate()
         hashpass(passwd).then((hashpasswd)=>{
@@ -44,7 +52,9 @@ const sendLoginToDB = (req, res)=>{
             let content = mailTemplate.confirm(data.email, data.tocken)
             sendMail(SERVER_EMAIL, content);
         })
-        res.send("post to /api")
+        res.send("Email has been sended")
 }
 
-exports.sendLoginToDB = sendLoginToDB
+exports.signUp = signUp
+exports.DBfindByEmail = DBfindByEmail
+exports.test_auth = test_auth

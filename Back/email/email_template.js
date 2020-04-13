@@ -7,15 +7,15 @@ const { CLIENT_ORIGIN } = require('../config/global')
 // (eg. unsubscribe) in the future.
 module.exports = {
 
-  confirm: (to, id) => ({
+  confirm: (to, tocken) => ({
     to : to,
     subject: 'React Confirm Email',
     html: `
-      <a href='${CLIENT_ORIGIN}/confirm/${to}/${id}'>
+      <a href='${CLIENT_ORIGIN}/confirm/${to}/${tocken}'>
         click to confirm email
       </a>
     `,      
-    text: `if the link above does not work. Copy and paste this link: ${CLIENT_ORIGIN}/confirm/${id}`
+    text: `if the link above does not work. Copy and paste this link: ${CLIENT_ORIGIN}/confirm/${tocken}`
   })
   
 }

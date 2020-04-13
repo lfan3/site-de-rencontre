@@ -1,3 +1,4 @@
+require('dotenv').config()
 var nodemailer = require('nodemailer')
 
 const credentials = {
@@ -6,8 +7,8 @@ const credentials = {
     secure: true,
     auth: {
       // These environment variables will be pulled from the .env file
-      user: 'fifidemacici@gmail.com', 
-      pass: 'fl409049'  
+      user: process.env.EMAIL_SENDER,
+      pass: process.env.EMAIL_PASSWD
     },
     debug: true
 }

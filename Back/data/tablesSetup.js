@@ -2,14 +2,27 @@ var pool = require('../config/pool');
     
 var Users = "CREATE TABLE IF NOT EXISTS users (\
                 id INT NOT NULL AUTO_INCREMENT,\
+                name VARCHAR(50) NOT NULL,\
                 age INT NOT NULL,\
-                sex INT NOT NULL,\
-                sex_orient INT NOT NULL,\
+                sex VARCHAR(10) NOT NULL,\
+                sex_orient VARCHAR(10) NOT NULL,\
                 geo_loc GEOMETRY NOT NULL,\
                 city VARCHAR(255),\
                 race VARCHAR(20),\
                 PRIMARY KEY (id)\
             );"
+
+var Preferences = "CREATE TABLE IF NOT EXISTS preferences( \
+                    id INT NOT NULL AUTO_INCREMENT,\
+                    sex VARCHAR(10) NOT NULL,\
+                    sex_orient VARCHAR(10) NOT NULL,\
+                    age INT NOT NULL,\
+                    distance INT NOT NULL\
+                    PRIMARY KEY (id), \
+                    FOREIGN KEY (user_id)\
+                        REFERENCES users(id)\
+                        ON DELETE CASCADE\
+                    );"
 
 //   INDEX par_ind (parent_id),\
 var Logins = "CREATE TABLE IF NOT EXISTS logins( \
@@ -67,7 +80,6 @@ var Likes = "CREATE TABLE IF NOT EXISTS likes( \
                     REFERENCES users(id)\
                     ON DELETE CASCADE\
             );" 
-
 
 
 let tables = [Users, Logins, Photos, Tags, Users_Tags, Likes]
