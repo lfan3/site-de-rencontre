@@ -1,8 +1,15 @@
 require('dotenv').config()
+
 const express = require('express')
+const app = express()
+const http = require('http')
+const server = http.createServer(app)
+const soketio = require('socket.io')
+const io = soketio(server)
+
 const path = require('path')
 const bodyParser = require('body-parser')
-const app = express()
+const router = require('./router')
 //CROS polity
 const cors = require('cors')
 const cloudinary = require('cloudinary')
@@ -14,11 +21,9 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const axios = require('axios')
 const bcrypt = require('bcrypt')
-const signUp = require('./email/signUp').signUp
-const test_auth = require('./email/signUp').test_auth
+const get_auth_user = require('./email/signUp').get_auth_user
 const DBfindByEmail = require('./email/signUp').DBfindByEmail
-const fetchAllPhotos = require('./data/api').fetchAllPhotos
-const {filterUsers, fetchUsersPhotos, getCriterias} = require('./data/api')
+//const {getUser, removeUser, addUser, getUserInRoom} = require('./helpers')
 
 
 cloudinary.config({
@@ -34,28 +39,29 @@ passport.use(new LocalStrategy(
         //test to grab user from database
         //name: DB.findByEmail()
         var data = DBfindByEmail(email)
+        //data.then ==> will call deserialize
         data.then((res)=>{
-        let user = res[0]
-        if(!user){
-            return done(null, false, {message : 'invalide'})
-        }
-        if(!bcrypt.compareSync(password, user.password)){
-            return done(null, false, {message : 'invalide password'})
-        }
-        //null is erro object, and then user object
-        return done(null, user)
+            let user = res[0]
+            if(!user)
+                return done(null, false, {message : 'invalide'})
+            if(!bcrypt.compareSync(password, user.password))
+                return done(null, false, {message : 'invalide password'})
+            //null is erro object, and then user object
+            //done ===> will call sterilize to store the data
+            return done(null, user)
         })
     }
 ))
 passport.serializeUser((user, done)=>{
     console.log('inside the serilize cb')
     console.log(user.id)
+    //stock user Id
     done(null, user.id)
 })
 passport.deserializeUser((id, done)=>{
     console.log('inside the deserialize')
-    test_auth(id)
-    .then((res)=>{done(null, res[0])})
+    get_auth_user(id)
+    .then((res)=>{done(null, res[0]);console.log('deserialize')})
     .catch(error => done(error))
 })
 
@@ -64,10 +70,10 @@ app.use(cors({
     methods : ['GET', 'POST'],
     credentials:true
 }));
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : false}));
 app.use(formData.parse())
-
 app.use(session({
     genid : (req) =>{
         console.log('inside the session middleware')
@@ -81,13 +87,7 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
-
-app.get('/signin', (req, res)=>{
-    console.log('inside the signin get callback function')
-    console.log(req.sessionID)
-    //res.send('env ' + process.env.CLOUD_NAME)
-    res.send('singin')
-})
+app.use(router)
 
 app.post('/signin', (req, res, next)=>{
     console.log('Inside Post/Login callback function')
@@ -112,62 +112,113 @@ app.post('/signin', (req, res, next)=>{
 app.get('/authrequired', (req, res)=>{
     console.log('inside authrequire')
     console.log(`user authentificated? ${req.isAuthenticated()}`)
-    if(req.isAuthenticated())
-        res.send('verified')
-    else
+    if(req.isAuthenticated()){
+        console.log('user is authenticated')
+        //sign userId to express sesssion. so that we can get assces to everywhere
+        req.session.userId = req.session.passport
+        res.send(req.session.passport)
+    }
+    else{
+        console.log('user is not autenticated')
+        res.send({user: null})
         res.redirect('/')
+    }
 })
 
-app.post('/signup', signUp)
-app.post('/email_verify', (req, res)=>{
-    console.log('inside email_verify')
-   const {email, tocken} = req.body 
-   let datapromise = DBfindByEmail(email)
-   datapromise.then((data)=>{
-        if(data){
-            //user != data, but data[0]
-            let user = data[0]
-            if(user.tocken === tocken){
-                console.log("email verified")
-                return res.send('email verified')
-            }
-        }else{
-            return res.send('email verification is KO')
+
+/**utility functions for socket */
+let users = []
+let messages = []
+const addUser = ({id, userA, name,room})=>{
+    name = name.trim().toLowerCase()
+    let user = {id, userA, name, room}
+    console.log('inside adduser')
+    console.log(user)
+    users.push(user)
+    return user
+}
+const getUser = (socketId)=>{
+    let user = users.find((each)=>each.id ===socketId)
+    return user
+}
+
+io.on('connect', (socket)=>{
+    console.log('a user is connected')
+
+    socket.on('joint',({userA, name, room})=>{
+        let id = socket.id
+        addUser({id, userA, name, room})
+        console.log(`a user ${name} is joined in ${room}`)
+    //    socket.broadcast.to(room).emit('message', {user: 'admin', txt : `${name} joins the room`})
+
+      //  console.log(users)
+
+        socket.join(room)
+    })
+    socket.on('message',(message, cb)=>{
+        console.log('message on server '+ message)
+        socket.emit('message', message)
+        cb()
+    })
+   socket.on('sendMessage', (message, cb)=>{
+        let user = getUser(socket.id)
+        if(user){
+           let time = new Date().toISOString().slice(0,19).replace('T', ' ')
+        let eachMessage = {
+            userA: user.userA, 
+            user : user.name, 
+            txt : message,
+            time
         }
+        messages.push(eachMessage)
+        io.to(user.room).emit('message', eachMessage)
+        cb()
+       }else{
+           console.log('user not joined')
+       }
    })
-
-})
-
-app.post('/main', (req, res)=>{
-    //const results = fetchAllPhotos()
-    let userId = req.body.userId
-    const results = fetchUsersPhotos(userId)
-    console.log(req.body)
-    results.then(users => {      
-        //send an array
-        res.send(users)
+    socket.on('disconnect', ()=>{
+        console.log('a user is left')
     })
 })
 
-app.post('/filterUsers', (req, res)=>{
 
-    let conditions = getCriterias(req.body)
-    console.log(conditions)
-    //filterUsers(conditions).then((result)=>{
-    //    console.log(result)
-    //    //result is an array of user object
-    //    res.send(result)
-    //})
-})
-app.post('/image-upload', (req, res)=>{
-   
-    const values = Object.values(req.files)
-    const promises = values.map((image)=> cloudinary.uploader.upload(image.path))
-    Promise
-        .all(promises)
-        .then(results => {res.json(results); console.log(results)})
-})
+/*
+io.on('connection', function(socket){
+    console.log('a user connected');
 
-app.listen(5000, ()=>{
+    socket.on('join', ({name, room}, cb)=>{
+        const {user, error} = addUser({id : socket.id, name, room})
+        if(error)
+            return cb(error)
+        socket.emit('message', {user : 'admin', text : `welcome ${user.name} enters inside ${user.room}`})
+        socket.broadcast.to(user.room).emit('message', {user: 'admin', text : `${user.name} joins the room`})
+        socket.join(user.room)
+        console.log(`${name} enters in ${room}`)
+        cb()
+    })
+
+    socket.on('sendMessage', (message, cb)=>{
+        let user = getUser(socket.id)
+        console.log(message)
+        let eachMessage = {user : user.name, text : message}
+        messages.push(eachMessage)
+        //io.to not soket.to
+        io.to(user.room).emit('message', eachMessage)
+        cb()
+    })
+
+    socket.on('disconnect', (name, room, cb)=>{
+
+        //removeUser(soketio.id)
+        //io.to(room).emit(`${name} is left`)
+        console.log('a user is left')
+    })
+});
+*/
+
+
+//at first i use app.listen(), but that does not work
+server.listen(5000, ()=>{
     console.log('running on 5000');
 })

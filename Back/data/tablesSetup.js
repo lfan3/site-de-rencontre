@@ -3,12 +3,11 @@ var pool = require('../config/pool');
 var Users = "CREATE TABLE IF NOT EXISTS users (\
                 id INT NOT NULL AUTO_INCREMENT,\
                 name VARCHAR(50) NOT NULL,\
-                age INT NOT NULL,\
+                birthday DATE NOT NULL,\
                 sex VARCHAR(10) NOT NULL,\
                 sex_orient VARCHAR(10) NOT NULL,\
                 geo_loc GEOMETRY NOT NULL,\
                 city VARCHAR(255),\
-                race VARCHAR(20),\
                 PRIMARY KEY (id)\
             );"
 
@@ -27,7 +26,7 @@ var Preferences = "CREATE TABLE IF NOT EXISTS preferences( \
 //   INDEX par_ind (parent_id),\
 var Logins = "CREATE TABLE IF NOT EXISTS logins( \
                 id INT NOT NULL AUTO_INCREMENT,\
-                login VARCHAR(20) NOT NULL,\
+                login VARCHAR(50) NOT NULL,\
                 email VARCHAR(50) NOT NULL,\
                 password VARCHAR(255) NOT NULL,\
                 tocken VARCHAR(255) NOT NULL,\
@@ -82,8 +81,64 @@ var Likes = "CREATE TABLE IF NOT EXISTS likes( \
             );" 
 
 
-let tables = [Users, Logins, Photos, Tags, Users_Tags, Likes]
+var profileText = "CREATE TABLE IF NOT EXISTS profileText(\
+                    id INT NOT NULL AUTO_INCREMENT,\
+                    descrip TEXT(2500) NOT NULL, \
+                    user_id INT NOT NULL,\
+                    PRIMARY KEY (id),\
+                    FOREIGN KEY (user_id)\
+                        REFERENCES users(id)\
+                        ON DELETE CASCADE\
+                    );"
 
+var single_like = "CREATE TABLE IF NOT EXISTS singleLike(\
+                    id INT NOT NULL AUTO_INCREMENT,\
+                    user_a INT NOT NULL,\
+                    user_b INT NOT NULL,\
+                    PRIMARY KEY (id),\
+                    FOREIGN KEY (user_a)\
+                        REFERENCES users(id)\
+                        ON DELETE CASCADE,\
+                    FOREIGN KEY (user_b)\
+                        REFERENCES users(id)\
+                        ON DELETE CASCADE\
+                    );"
+                
+
+var mutual_like = "CREATE TABLE IF NOT EXISTS mutualLike(\
+                    id INT NOT NULL AUTO_INCREMENT,\
+                    user_a INT NOT NULL,\
+                    user_b INT NOT NULL,\
+                    room INT NOT NULL,\
+                    PRIMARY KEY (id),\
+                    FOREIGN KEY (user_a)\
+                        REFERENCES users(id)\
+                        ON DELETE CASCADE,\
+                    FOREIGN KEY (user_b)\
+                        REFERENCES users(id)\
+                        ON DELETE CASCADE\
+                    );"
+
+var messages = "CREATE TABLE IF NOT EXISTS messages(\
+                    id INT NOT NULL AUTO_INCREMENT,\
+                    user_id INT NOT NULL,\
+                    message TEXT(500),\
+                    time TIMESTAMP NOT NULL,\
+                    PRIMARY KEY (id)\
+                    );"
+
+let tables = [
+    Users, 
+    Logins, 
+    Photos, 
+    Tags, 
+    Users_Tags, 
+    Likes, 
+    profileText, 
+    single_like,
+    mutual_like,
+    messages
+]
 pool.getConnection((err, connection) => {
     if (err) {
         if (err.code === 'PROTOCOLE_CONNECTION_LOST')
@@ -101,7 +156,6 @@ pool.getConnection((err, connection) => {
         });
     })
 })
-
 
 
 

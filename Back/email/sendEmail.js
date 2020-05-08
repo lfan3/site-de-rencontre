@@ -12,10 +12,10 @@ const credentials = {
     },
     debug: true
 }
-
 const transporter = nodemailer.createTransport(credentials)
 
 const sendMail = (user_email, mail_content) =>{
+ 
     let mailOptions = {
         from : user_email
     }
