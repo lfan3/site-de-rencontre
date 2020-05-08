@@ -64,6 +64,9 @@ html, body, #app{
     margin-top: 45px;
 }
 
+.no-padding{
+    padding: 0;
+}
 /*SignForms page*/
 .flex-colum{
     display: flex;
@@ -153,14 +156,16 @@ li{
     list-style-type: none;
     text-align: center;
 }
-
+.main-container{
+    padding-left : 20px;
+}
 .grid-li{
    margin: 20px;
    border: #2e4158 solid 2px;
 }
 .image-grid{
-    height: 22vh;
-    width: 18vh;
+    height: 30vh;
+    width: 26vh;
 }
 .grid{
     display: flex;
@@ -193,4 +198,14 @@ li{
 /******range  slider ****/
 #double2{
     margin-top : 10px;
+}
+
+/****** CHAT STYLE *****/
+
+/*****Biography ***/
+.hidden{
+    display: none
+}
+.show{
+    display: block
 }
