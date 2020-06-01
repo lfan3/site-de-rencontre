@@ -1,7 +1,13 @@
 const express = require('express')
 const router = express.Router()
+const fs = require('fs')
 const signUp = require('./email/signUp').signUp
+const path = require('path')
+const Errors = require('./errors')
+const HttpStatus = require('./httpStatus')
+
 const fetchAllPhotos = require('./data/api').fetchAllPhotos
+
 const {
     filterUsers, 
     fetchUsersPhotos, 
@@ -13,7 +19,14 @@ const {
     fetchMutualLikes,
     insertLike,
     checkMutualLike,
-    unmachted
+    unmachted,
+    sendPhoto,
+    getUserPhotos,
+    updateAvatar,
+    getAllTags,
+    getFrenchCities,
+    getArrondParis,
+    insertNewUser
     } = require('./data/api')
 
 
@@ -38,7 +51,6 @@ router.post('/session', (req, res)=>{
     //res.send(req.session.userId)
     res.send({data : 'ok from server'})
 })
-/***main page */
 router.post('/main', (req, res)=>{
     //const results = fetchAllPhotos()
     let userId = req.body.userId
@@ -71,10 +83,8 @@ router.post('/filterUsers', async(req, res)=>{
     //    console.log('error in post filterUsers '+error)
     //})
 })
-/***profile page */
+
 router.post('/profile/:userId', (req, res)=>{
-        //url = '/profile/285'
-        //let url = req.originalUrl
         let userB = req.params.userId
         let userA = req.body.userA
         let promises = [
@@ -129,6 +139,80 @@ router.get('/matched/:userId', (req, res)=>{
         console.log('error in post matched ' + e)
         res.send({error : 'Four O Four == 404 Not Found'})
     })
+})
+
+//! photo setting page routers
+function threeLettersGene(){
+    var result = ''
+    var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    for(let i=0; i<3; i++){
+        result += alphabet.charAt(Math.random()*26)
+    }
+    return result
+}
+router.post('/uploadImg', (req, res)=>{
+    let resolve_path = path.resolve('../')
+    let imageName = threeLettersGene() + Date.now()
+    let is_profile = req.body.profile
+    let userA = req.body.userA
+    //! imagepath like public/images
+    //let imagePath = `${resolve_path}/public/images/${imageName}.png`
+    let imagePathWrite = `${resolve_path}/Front/public/images/${imageName}.png`
+    let imagePath = `public/images/${imageName}.png`
+    let base64 = req.body.image64.replace(/^data:image\/png;base64,/, "")
+    require('fs').writeFile(imagePathWrite, base64, 'base64', (error)=>{
+        console.log(error)
+    })
+    sendPhoto(imagePath, userA, is_profile)
+    res.send({imagePath : imagePath})
+})
+
+router.post('/getPhotos', async (req, res)=>{
+    let userId = req.body.userA
+    let photos = await getUserPhotos(userId)
+    res.json(photos)
+})
+router.post('/updateAvatar', async(req, res)=>{
+    let imagePath = req.body.imgPath
+    let userId = req.body.userA
+    await updateAvatar(userId, imagePath)
+    let photos = await getUserPhotos(userId)
+    res.json(photos)
+})
+//! basicquestions routers
+router.get('/tags', async(req, res)=>{
+    getAllTags(1)
+    .then((tags)=>res.json(tags))
+    .catch((e)=>{
+        if(e instanceof Errors.NotFound)
+            return res.status(HttpStatus.NOT_FOUND).send({message: e.message})
+        else
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({error: e, message: e.message})
+    })
+})
+
+router.get('/cities', async(req, res)=>{
+    const promises = [getFrenchCities(), getArrondParis()]
+    try{
+        const [cities, arronds] = await Promise.all(promises).then()
+        res.json({cities, arronds})
+    }catch(e){
+        if(e instanceof Errors.NotFound)
+            return res.status(HttpStatus.NOT_FOUND).send({message : e.message})
+        else
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({error: e, message: e.message})
+    }
+})
+router.post('/newUser', async(req, res)=>{
+    let userData = req.body
+    console.log(userData)
+    insertNewUser(userData)
+})
+
+//! match_question
+router.post('/match_questions', async(req, res)=>{
+    let match_answers = req.body
+    console.log(match_answers)
 })
 
 

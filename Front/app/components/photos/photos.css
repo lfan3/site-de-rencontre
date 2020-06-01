@@ -1,9 +1,8 @@
 .h-10{
     height: 10%;
 }
-.h-80{
-    height: 80%;
-    background-color:bisque;
+.gray{
+    background-color:#EEEEEE;
 }
 .photo-container{
     height: 35em;

@@ -4,7 +4,7 @@ import Checkbox from '../filterBar/Checkbox'
 import SubmitBtn from './SubmitBtn'
 import './questions.css'
 
-
+//todo: if parter answer are not selected, button can not be clickable
 const SelectBox = ({selectChange})=>{
     return(
         <select 
@@ -31,14 +31,13 @@ const OptionCheckbox = (props)=>{
                 <span >No</span>
             </label>
         </div>
-
     )
 }
 
 
 const QuestionsCard = (props)=>{
     let {index} = props
-
+   
     return(
         <div className = 'container'>
         <div className = 'row justify-content-center'>
@@ -95,6 +94,8 @@ const useAnswersReducer = (state, action)=>{
             ...state, 
             option : action.data
         }
+    }else if(action.type === 'submit'){
+        console.log(action.data)
     }
 }
 
@@ -103,6 +104,7 @@ const initialPartState = {
     option1 : true,
     option2 : false,
     option3 : false,
+    disableBtn: true,
     answers : [],
     //option text 
     option : 'yes',
@@ -136,7 +138,7 @@ const QuestionsContainer = ()=>{
             dispatch({type : 'option1', data : false})
     }
     const nextQuestion = ()=>{
-        if(index < 10){
+        if(index < 11){
             setIndex(index => index+1)
             dispatch({type : 'option2', data : yes})
             dispatch({type : 'option3', data : no})
@@ -146,12 +148,9 @@ const QuestionsContainer = ()=>{
         setNo(false)
     }
     const submitHandler = (e)=>{
-        dispatch({type : 'option2', data : yes})
-        dispatch({type : 'option3', data : no})
-        dispatch({type : 'answers'})
+        dispatch({type: 'submit', data : partState})
         setSubmit(true)
     }
-    console.log(partState)
     return(
        <div className = 'center-page'>
             {submit === false
@@ -165,7 +164,9 @@ const QuestionsContainer = ()=>{
             checkYes = {checkYes}
             checkNo = {checkNo}
             submitHandler = {submitHandler}
-            beforeLastNumQues = {9}
+            beforeLastNumQues = {10}
+            option2 = {partState.option2}
+            option3 = {partState.option3}
             />
             :
             <h1>Felicitation</h1>

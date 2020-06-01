@@ -9,8 +9,10 @@ const io = soketio(server)
 
 const path = require('path')
 const bodyParser = require('body-parser')
+
 const router = require('./router')
 //CROS polity
+
 const cors = require('cors')
 const cloudinary = require('cloudinary')
 const formData = require('express-form-data')
@@ -31,7 +33,7 @@ cloudinary.config({
     api_key : process.env.API_KEY,
     api_secret: process.env.API_SECRET
 })
-
+/*
 passport.use(new LocalStrategy(
     {usernameField: 'email'},
     (email, password, done) => {
@@ -64,16 +66,17 @@ passport.deserializeUser((id, done)=>{
     .then((res)=>{done(null, res[0]);console.log('deserialize')})
     .catch(error => done(error))
 })
-
+*/
 app.use(cors({
     origin : 'http://localhost:8081',
     methods : ['GET', 'POST'],
     credentials:true
 }));
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended : false}));
+app.use(bodyParser.json({limit : '10mb'}))
+app.use(bodyParser.urlencoded({extended : true, limit : '10mb'}));
 app.use(formData.parse())
+/*
 app.use(session({
     genid : (req) =>{
         console.log('inside the session middleware')
@@ -85,10 +88,11 @@ app.use(session({
     resave : false,
     saveUninitialized: true
 }))
+*/
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(router)
-
+/*
 app.post('/signin', (req, res, next)=>{
     console.log('Inside Post/Login callback function')
     console.log('req.body: ')
@@ -124,9 +128,8 @@ app.get('/authrequired', (req, res)=>{
         res.redirect('/')
     }
 })
+*/
 
-
-/**utility functions for socket */
 let users = []
 let messages = []
 const addUser = ({id, userA, name,room})=>{

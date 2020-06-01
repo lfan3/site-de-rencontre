@@ -11,8 +11,13 @@ var pool = mysql.createPool({
         connectTimeout	: 0
 })
 
+
+//! Two ways to create a promisify mysql connections
+const promisePool = pool.promise()
 pool.query = util.promisify(pool.query)
-module.exports = pool
+module.exports.pool = pool
+module.exports.promisePool = promisePool
+
 
 
 

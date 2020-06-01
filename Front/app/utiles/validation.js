@@ -3,7 +3,7 @@ export const valideUsernameReg = RegExp("^[0-9a-zA-Z][\\w\\d\\-]{1,8}[0-9a-zA-Z]
 export const validePassReg = RegExp("^(?=.*[A-Z])(?=.*[0-9])(?=.*[$@£])(?!.*[\"\|&+=`%*~\\\\><?])\\S{6,20}$")
 export const valideNumReg = RegExp("^\d+$")
 export const valideTagReg = RegExp("^#[\\w@\\-(){}:\\^%,\\.]{1,10}$")
-
+export const valideNameReg = RegExp("^[a-zA-Z]{1,20}([\\t]|[\\-]){0,3}[a-zA-Z]{0,20}")
 //! Test Email
 /*
 * " !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~" (the first one is espace) , these are allowed caracter for passwordfiles

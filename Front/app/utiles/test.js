@@ -1,12 +1,16 @@
+let name = 'james -anna '
+let c = name.trim()
+let d = name.split('-')
+let f = name.includes('-')
 
+function reformName(name){
 
+    let nameArr = name.split(' ')
+    let names = nameArr.map((name)=>name.trim())
+    console.log(names)
+    let newName = names.join(' ')
+    console.log(newName)
+    return newName
+}
 
-let e1 = 'fifidemacici@gmail.com'
-let e2 = 'fam!#/@gg.co'
-let e3 = 'fe@g'
-let a = valideEmailReg.test(e1)
-let b = valideEmailReg.test(e2)
-let c = valideEmailReg.test(e3)
-console.log(a)
-console.log(b)
-console.log(c)
+let n = reformName(name)

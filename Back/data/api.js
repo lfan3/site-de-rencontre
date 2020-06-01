@@ -1,5 +1,228 @@
-const pool = require('../config/pool')
+const {pool, promisePool} = require('../config/pool')
+const Errors = require('../errors')
+const {formDateFormat,
+        reducerTags,
+        filterTags,
+        getFinalCity,
+} = require('./BQApi_helpers')
+
+//! match_question part
+async function insertMatchQuestion(questionsObj){
+    
+}
+//! basic question part
+const dummyuserData = {
+    login_id: 512,
+    name: 'ja  ms',
+    arronds: "1er Ardt",
+    city: "Paris",
+    day: 1,
+    gender: "woman",
+    index: 5,
+    position: {lat: 48.784852199999996, lon: 2.3944554},
+    month: 1,
+    newTags: ["#adventure", "#great", "mosaic"],
+    orient: "straight",
+    tag: "",
+    year: 2002,
+}
+
+//???? what is the best way to organise my db request logic?
+//TODO0-1 Othres api error handling -not yet
+//! user information from basicQuestion.js
+
+async function getNewTagsObj(newTags, reducerTags){
+    try{
+        let tagsObj = await getAllTags(0)
+        let oldTags = tagsObj.map((tagObj)=>tagObj.tag)
+        let branlyNewTags = filterTags(reducerTags, newTags, oldTags, 1)
+        let oldTagsFromNew = filterTags(reducerTags, newTags, oldTags, 0)
+        return {branlyNewTags, oldTagsFromNew}
+    }catch(err){
+        //*router can get only the error from catch block
+        throw new Error('getNewTags Error: ' + err)
+    }
+}
+async function insertTag(newTags){
+    try{
+        let tagsObj = await getNewTagsObj(newTags, reducerTags)
+        let tags = tagsObj.branlyNewTags
+        if(tags.length){
+            let values = ''
+            for(let i=1; i< tags.length - 1; i++){
+                values += `('${tags[i]}'),`
+            }
+            values += `('${tags[tags.length-1]}')`
+            let query = `INSERT INTO tags(tag) VALUES ${values}`
+            await pool.query(query)
+        }else{
+            console.log('no new tag in inserTag')
+        }
+    }catch(e){
+        throw new Error('insertTag of api Error: '+e)
+    }
+}
+
+//!multiply queries
+async function insertLoginTag(newTags, login_id){
+    let queries = []
+    let ids = []
+    //get all newTags id, then insert into logins_likes
+    for(let i=0; i<newTags.length; i++)
+        queries[i] = `SELECT id FROM tags WHERE tag = '${newTags[i]}'`
+    queries.forEach((q)=>console.log(q))
+    //pool.getConnection = util.promisify(pool.getConnection)
+    //const connection = await pool.getConnection()
+    const connection = await promisePool.getConnection()
+
+    try{
+        await connection.beginTransaction();
+        for(let i=0; i<queries.length; i++){
+            ids[i] = await connection.query(queries[i])
+            await connection.query((`INSERT INTO logins_tags(login_id, tag_id)VALUES(${login_id}, ${ids[i][0][0]['id']})`))
+        }
+        await connection.commit()
+    }catch(e){
+        await connection.rollback()
+        throw new Error('insertLoginTag Error '+e)
+    }
+    finally{
+        await connection.release()
+    }
+    return ids
+}
+
+async function insertNewUser(userData){
+    try{
+        const {login_id, name, arronds, city, position, day, month, year,gender,newTags, orient} = userData
+        
+        let date = new Date(formDateFormat(year, month, day))
+        console.log(date)
+        let birthMysql = date.toISOString().slice(0,10)
+        let finalcity = await getFinalCity(position, city, arronds)
+        //!no , in ST_GEOMFROMTEXT, remember immer " "
+        let query = `INSERT INTO users (name, birthday, sex, sex_orient, geo_loc, city, login_id)\
+                     VALUES("${name}","${birthMysql}","${gender}","${orient}", \
+                            ST_GeomFromText('POINT(${position.lat} ${position.lon})',4326),\
+                            "${finalcity}", "${login_id}")`
+                            console.log(query)
+        pool.query(query)
+        //*inster tags
+        await insertTag(newTags)
+        await insertLoginTag(newTags, login_id)
+    }catch(e){
+        console.log('insertNewUser Error' + e)
+        if(e instanceof Errors.NotFound)
+            throw new Errors.NotFound(e.message)
+        throw new Error('Error from insertNewUser')
+    }
+}
+
+//insertNewUser(userData)
+
+async function getAllTags(order){
+    try{
+        let query = ''
+        if(order == 1)
+            query = 'SELECT tag FROM tags ORDER BY tag'
+        else
+            query =  'SELECT tag FROM tags'
+        let tags = await pool.query(query)
+        //* allow to see clearly where is the error, this error will be soon captured by the catch(e)
+        if(!tags.length)
+            throw new Errors.NotFound('tag not found tags')
+        return(tags)
+
+    }catch(err){
+        //*router can get only the error from catch block
+        console.log('getAllTags Error' + err)
+        if(err instanceof Errors.NotFound){
+            throw new Errors.NotFound(err.message)
+        }else{
+            throw new Error('normal error' + err)
+        }
+    }
+}
+//getAllTags(1).then(res=>console.log(res))
+async function getFrenchCities(){
+    try{
+        let query = 'SELECT ville_nom FROM villes_france_free \
+                        WHERE ville_population_2012>30000\
+                        ORDER BY ville_nom'
+        let cities = await pool.query(query)
+        if(!cities.length)
+            throw new Errors.NotFound('cities are not found')
+        return(cities)
+    }catch(e){
+        console.log('getFrenchCities error ' +e )
+        if(e instanceof Errors.NotFound){
+            throw new Errors.NotFound(e.message)
+        }else{
+            throw new Error(e)
+        }
+    }
+}
+
+async function getArrondParis(){
+    try{
+        let query = 'SELECT l_ar FROM arrondissements'
+        let arronds = await pool.query(query)
+        if(!arronds.length)
+            throw new Errors.NotFound("l'arrondissements are not found")
+        return (arronds)
+    }catch(e){
+        console.log('getArrondParis Error '+e)
+        if(e instanceof Errors.NotFound)
+            throw new Errors.NotFound(e.message)
+        else
+            throw new Error(e)
+    }
+}
+//! setting photos api
+async function getUserPhotos(userId){
+    try{
+        let query = `SELECT photo_path, is_profile from photos WHERE user_id = ${userId}`
+        let res = await pool.query(query)
+        return(res)
+    }catch(e){
+        console.log('getUserPhoto Error ' + e)
+    }
+}
+
+async function changeProfilePhoto(userId){
+    try{
+        let query = `UPDATE photos SET is_profile = 0 WHERE user_id = ${userId}`
+        await pool.query(query)
+    }catch(e){
+        console.log('changeProfilePhoto Error '+e)
+    }
+}
+async function updateAvatar(userId, imagePath){
+    try{
+        await changeProfilePhoto(userId)
+        let query = `UPDATE photos SET is_profile = 1 WHERE user_id = ${userId} AND photo_path="${imagePath}"`
+        await pool.query(query)
+        console.log('inside updataAvatar')
+        console.log(query)
+    }catch(e){
+        console.log('changeProfilePhoto Error '+e)
+    }
+}
+async function sendPhoto(imagePath, userId, is_profile){
+    try{
+        console.log('in send photo', userId, is_profile)
+
+        if(is_profile){
+            await changeProfilePhoto(userId)
+        }
+        let query = `INSERT INTO photos(photo_path, is_profile, user_id) VALUES("${imagePath}", ${is_profile}, ${userId})`
+        await pool.query(query)
+    }catch(e){
+        console.log('sendPhoto erro '+e)
+    }  
+}
 /************************socket send messages to DB********* */
+/* mysql synthas proble
 let ms = [
     {userA : 1, txt:'nice', time:'1'},
     {userA : 2, txt:'nice', time:'1'},
@@ -15,19 +238,19 @@ const sendMessages = async(msmArray)=>{
         else
             values += `(${userA}, ${txt}, ${time})`
     }
-    let query = `INSERT INTO messages (user_id, message, time) ${values}`
+    //! VALUES KEY WORKD
+    let query = `INSERT INTO messages (user_id, message, time) VALUES ${values}`
     try{
         pool.query(query)
     }catch(e){
         console.log('error in sendMessages '+e)
     }
 }
-
+*/
 const getMessagesFromRoom = async(room)=>{
     let query = `SELECT user_id, message Frome messages Where room = ${room} LIMIT 20`
 }
 
-sendMessages(ms)
 /************************LIKE BUTTON Api **********************/
 const fetchMutualLikes = async(userA) =>{
     try{
@@ -408,3 +631,10 @@ exports.addMutualLike = addMutualLike
 exports.insertLike = insertLike
 exports.checkMutualLike = checkMutualLike
 exports.unmachted = unmachted
+exports.sendPhoto =  sendPhoto
+exports.getUserPhotos = getUserPhotos
+exports.updateAvatar = updateAvatar
+exports.getAllTags = getAllTags
+exports.getFrenchCities = getFrenchCities
+exports.getArrondParis = getArrondParis
+exports.insertNewUser = insertNewUser

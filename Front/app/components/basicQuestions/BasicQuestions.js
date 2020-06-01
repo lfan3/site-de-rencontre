@@ -1,11 +1,22 @@
 import React, {useRef, useState, useReducer,useEffect} from 'react'
 import SubmitBtn from '../questions/SubmitBtn'
 import {csv, dsv, json} from 'd3'
+import {valideNameReg, valideUsernameReg} from '../../utiles/validation'
 import './basic.css'
-import {valideTagReg} from '../../utiles/validation'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons"
-
+import { API_URL } from '../../config'
+import {TagsWall, TagsBtn, TagsCreation, TagsSelection} from './Tags'
+import {getCities, geolocation, getTags} from './HttpRequest'
+import {
+    initalState,
+    CHANGE_GENDER,
+    CHANGE_ORIENT,
+    CHANGE_CITY,
+    ADD_ERROR,
+    ADD_NAME,
+    CHANGE_ARRD,
+    NEXT,
+    stateReducer
+    } from './Reducer'
 /************************************************************* */
 /*-------------------------------------------------------------*/
 //              useReducer way to handle seperated/mutliply pages formulaire
@@ -17,6 +28,9 @@ import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons"
 //otherwise, we need a changeHandler, but if we use changehandler, it is better to use a stateful valuething
 //BUUUUUUUUUUT if it is a multiply page formulaire, it is better to use stateful value , so the value stay in the state
 
+
+
+//! Components
 const Selection = (props)=>{
     const {optionsNumber, id, dispatch} = props
     //with onchange selection
@@ -46,6 +60,23 @@ const Selection = (props)=>{
     )
 } 
 
+function Name(props){
+    const {dispatch,name} = props
+    const changeHandler = (e)=>{
+        let value = e.target.value
+        console.log(value)
+        if(valideNameReg.test(value))
+            dispatch({type:ADD_NAME, data : value})
+        else
+            dispatch({type: ADD_ERROR, data : 'It is not a valide name'})
+    }
+    return(
+        <div className='form-row'>
+            <input type='text' value={name} onChange={changeHandler}></input>
+        </div>
+    )
+
+}
 const Birthday= (props)=>{
     return(
     <div className='form-row'> 
@@ -99,167 +130,57 @@ const OrientSelection = (props)=>{
         </select>
     )
 }
+//* Now i just get all cities from france and when it is paris, it goes to arrondissemnts
+//* cities data comes from db
+//todo: improuve: use GeoDB cities API to trive all world's cities
 
 const CitySelection = (props)=>{
-    //selection with svg file
-    //ip location
-    const {dispatch} = props
-    const [cityApi, setCityApi] = useState({})
-    useEffect(()=>{
-        //csv('app/dataCSV/villes_france.csv').then(data=>{
-        //    data.forEach(d => setCity(()=>city.push(d.OZAN)))
-        //})
-        //json('app/dataCSV/arrondissements.json').then(data=>{
-        //    console.log(data)
-        //    let noms = data.map(d=>d.fields.l_ar)
-        //    setCity(noms)
-        //})
-        fetch('http://ip-api.com/json/?fields=status,city,query,lat,lon')
-            .then(res=>res.json())
-            .then((res)=>{
-                setCityApi(res)
-            })
-
-    }, [])
-    console.log(cityApi)
+    //* give i keep it formyself option/others
+    const {dispatch, citiesData, city} = props
+    const {cities, arronds} = citiesData
     const changeHandler = (e)=>{
         let value = e.target.value
         dispatch({type:CHANGE_CITY, data : value})
     }
-    return(
-        <select 
-            id = 'city'
-            className='form-control'
-            onChange = {changeHandler}
-        >
-        <option value='paris'>paris</option>
-        <option value='newyork'>New York</option>
-        <option value='london'>London</option>
-        </select>
-    )
-}
-
-const TagsSelection = (props)=>{
-    //get tags from the back with useEffect
-    //fake tags array from back
-    //add tags to state Api
-    let tags = ['sunshine', 'learning', 'computer games', 'alcool']
-    const dispatch = props.dispatch
-    const changeHandler = (e)=>{
-        let value = e.target.value
-        dispatch({type:CHANGE_TAG, data : value})
+    const parisChangeHandler = (e)=>{
+        let arronds = e.target.value
+        console.log('event', arronds)
+        dispatch({type: CHANGE_ARRD, data: arronds})
     }
     return(
-        <select 
-            id = 'tags'
-            className='form-control'
-            onChange = {changeHandler}
-        >
-        {tags.map((tag)=>(<option value={tag} key={tag}>{tag}</option>))}
-        </select>
-    )
-
-}
-
-const TagsBtn = (props)=>{
-    const {tag, dispatch} = props
-    const [created, setCreated] = useState(false)
-    const clickHandler = ()=>{
-        console.log('inside tagbtn ' + tag)
-        console.log(valideTagReg.test(tag))
-        if(valideTagReg.test(tag)){
-            console.log('hey')
-            dispatch({type: CREATE_TAG, data: tag})
-            dispatch({type: ADD_ERROR, data : ''})
-            setCreated(true)
-        }else{
-            dispatch({type: ADD_ERROR, data : 'It is not a valide hashtag'})
-        }
-    }
-    return(
-        <div className='row justify-content-center'>
-            <div className='col-6'>
-                 <button className='btn btn-warning' onClick={clickHandler}>Creat</button>
-                 {created && <button className='btn btn-primary' >Finish</button>}
-            </div>
+        <div>
+            <select 
+                id = 'city'
+                className='form-control'
+                onChange = {changeHandler}
+            >
+            <option>--choose your city--</option>
+            {cities.map((city,index)=>(
+                <option value={city.ville_nom} key ={index}>{city.ville_nom}</option>
+            ))}
+            <option>No my city option</option>
+            </select>
+            {city === 'PARIS' && (
+                <select 
+                    id = 'paris' 
+                    className = 'form-control'
+                    onChange = {parisChangeHandler}
+                >
+                    {arronds.map((arr)=>(
+                        <option key={arr.l_ar} value={arr.l_ar}>{arr.l_ar}</option>
+                    ))}
+                </select>
+            )}
         </div>
+
     )
 }
 
-const TagsWall = (props) =>{
-    let {tags, dispatch} = props
-    return(
-        <ul className='flex-row'>
-            {tags.map(tag=>(
-                <li key={tag} style={{margin : '15px'}}>{tag}</li>
-            ))
-            }
-        </ul>
-    )
-
-}
-const TagsCreation = (props)=>{
-    //let the user to enter the tags by themselves
-     //add tags to state Api
-     //const dispatch = props.dispatch
-     //const changeHandler = (e)=>{
-     //    let value = e.target.value
-     //    dispatch({type:CHANGE_TAG, data : value})
-     //}
-     //verify
-     /*
-
-     const [value, setValue] = useState('')*/
-     let {tag, dispatch} = props
-     let [warnToggle, setWarnToggle] = useState(false)
-     const changeHandler = (e)=>{
-        let val = e.target.value
-        dispatch({type : ADD_TAG, data : val})
-    }
-    const mouseEnterhandler = (e)=>{
-        setWarnToggle(true)
-    }
-    const mouseLeavehandler = (e)=>{
-        setWarnToggle(false)
-    }
-     return(
-         <div>
-            <input 
-            className = 'form-controle form-controle-lg'
-            type='text' 
-            placeholder='enter one tag' 
-            value={tag} 
-            onChange = {changeHandler}
-            />
-            
-            <span>
-            <FontAwesomeIcon 
-                icon={faExclamationTriangle} 
-                style={{color:'red'}}
-                onMouseEnter = {mouseEnterhandler} 
-                onMouseLeave = {mouseLeavehandler} />
-            </span>
-            {warnToggle && 
-                <div 
-                className='border border-warning text-muted' 
-                style={{fontSize : '15px', marginTop : '15px'}}>
-                <p >
-                    The hashtag should begin with # like #hashtag. 
-                </p>
-                <p>
-                    Following the # 
-                    you can add up to ten signes(letter, numbers, the special caracters(-_@(){}:,.^%))
-                </p>
-            </div>
-            }
-   
-
-         </div>
-     )
-}
-
+//todo: move these questions to DB
+// ! dummy data
 //<Selection optionsNumber = {12} id='month' monthRef={monthRef}/>
 const questions = [
+    "What is your name?",
     "When is your birthday ?",
     "What is your gender ?",
     "What is your sex orientation ?",
@@ -267,84 +188,6 @@ const questions = [
     "Choose some tags that you like",
     "Do you want to create your own tags ? Let's do it."
 ]
-//utility function
-const existedInArray = (el, arr)=>{
-    let judger = false
-    for(let i=0; i<arr.length; i++){
-        if(arr[i] === el)
-            judger = true
-    }
-    return judger
-}
-const initalState = {
-    day : 1,
-    month : 1,
-    year : 2002,
-    gender : 'woman',
-    orient : 'straight',
-    city : 'paris',
-    index : 4,
-    tag : '',
-    tags : [],
-    newTags : [],
-    error : ''
-}
-//not useful because of selection
-//const CHANGE_DAY = 'CHANGE_DAY'
-//const CHANGE_MONTH = 'CHANGE_MONTH'
-
-const CHANGE_GENDER = 'CHANGE_GENDER'
-const CHANGE_ORIENT = 'CHANGE_ORIENT'
-const CHANGE_CITY = 'CHANGE_CITY'
-const CHANGE_TAGS = 'CHANGE_TAGS'
-const ADD_TAG = 'ADD_TAG'
-const CREATE_TAG = 'CREATE_TAG'
-const DELETE_TAG = 'DELETE_TAG'
-const ADD_ERROR = 'ADD_ERROR'
-
-const stateReducer = (state, action)=>{
-    if(action.type === 'next'){
-        return(Object.assign({}, state, {index : state.index + 1}))
-    }
-    else if(action.type === 'changeDay'){
-        return(Object.assign({}, state, {day : action.data}))
-    }
-    else if(action.type === 'changeMonth')
-        return(Object.assign({}, state, {month : action.data}))
-    else if(action.type === 'changeYear')
-        return(Object.assign({}, state, {year : action.data}))
-    else if(action.type === CHANGE_GENDER)
-        return(Object.assign({}, state, {gender : action.data}))
-    else if(action.type === CHANGE_ORIENT)
-        return(Object.assign({}, state, {orient : action.data}))
-    else if(action.type === CHANGE_CITY)
-        return(Object.assign({}, state, {city : action.data}))
-    else if(action.type === 'changeTags'){
-        //change to concate when there is api
-        return(Object.assign({}, state, {tags : action.data}))
-    }
-    else if(action.type === ADD_TAG){
-        return(Object.assign({}, state, {tag : action.data}))
-    }
-    else if(action.type === CREATE_TAG){
-        let tag = action.data
-        let newTags = state.newTags
-        if(existedInArray(tag, newTags))
-            return(Object.assign({}, state, {tag :''}))
-        else    
-            return(Object.assign({}, state, {tag :''},{newTags : newTags.concat([tag])}))
-    }
-    else if(action.type === DELETE_TAG){
-        let newTags = state.newTags.filter((nt)=> nt !== action.data)
-        return(Object.assign({}, state, newTags))
-    }
-    else if(action.type === ADD_ERROR)
-        return(Object.assign({}, state, {error : action.data}))
-    else if(action.type === 'submit'){
-        return(Object.assign({}, state, {tag : state.tag.concat(state.newTags)}, {newTags : []}))
-    }
-
-}
 
 
 const BasicQ = ()=>{
@@ -353,10 +196,43 @@ const BasicQ = ()=>{
         initalState
     )
     let index = state.index
+    //* just call the asyn function inside the useEffect
+    useEffect(()=>{
+        geolocation(dispatch)
+    }, [])
+    useEffect(()=>{
+        getCities(dispatch)
+    },[])
+    useEffect(()=>{
+        getTags(dispatch)
+    },[])
 
+    const finishHandler = ()=>{
+        console.log(state)
+        const {arronds, city, position, day, month, year,gender,newTags, orient, ipCity} = state
+        const data = {arronds, ipCity, city, position, day, month, year,gender,newTags, orient}
+        
+        finishFetch(data)
+        .then(res=>res.json())
+        .then(()=>{dispatch({type: NEXT})})
+        .catch((e)=>{dispatch({type: ADD_ERROR, data: 'OO something is wrong'}) } )
+    }
+    //todo2-1: tomorrow: error handling in node and react error boundray
+    const finishFetch = async(data)=>{
+        let options = {
+            method : 'POST',
+            headers: {'Content-Type' : 'application/json'},
+            body : JSON.stringify(data),
+        }
+        try{
+            fetch(`${API_URL}/newUser`, options)
+        }catch(e){
+            throw new Error('user data did not sended correctly')
+        }
+    }
     return(
         <div className='container-fluid center-page'>
-            {index===5 && <div className='row no-padding justify-content-center'>
+            {(index===6 || index===5 )&& <div className='row no-padding justify-content-center'>
                 <div className='col-4'>
                    {<TagsWall tags = {state.newTags} dispatch={dispatch}/>}
                 </div>
@@ -369,24 +245,29 @@ const BasicQ = ()=>{
             </div>
             <div className='row no-padding justify-content-center mediumMargin'>
                 <div className='offset-4 col-7'>
-                {index === 0 && <Birthday dispatch = {dispatch}/>}
-                {index === 1 &&  <GenderSelection dispatch = {dispatch}/>}
-                {index === 2 &&  <OrientSelection dispatch = {dispatch}/>}
-                {index === 3 &&  <CitySelection dispatch = {dispatch}/>}
-                {index === 4 &&  <TagsSelection dispatch = {dispatch}/>}
-                {index === 5 &&  <TagsCreation dispatch = {dispatch} tag={state.tag}/>}
+                {index === 0 && <Name dispatch = {dispatch} name = {state.name}/>}
+                {index === 1 && <Birthday dispatch = {dispatch}/>}
+                {index === 2 &&  <GenderSelection dispatch = {dispatch}/>}
+                {index === 3 &&  <OrientSelection dispatch = {dispatch}/>}
+                {index === 4 &&  (!state.citiesload ?<CitySelection dispatch = {dispatch} citiesData = {state.citiesData} city={state.city}/> : <div>loading</div>)}
+                {index === 5 && (!state.tagsload ? <TagsSelection dispatch = {dispatch} tags={state.tagsData}/> : <div>loading</div>)}
+                {index === 6 &&  <TagsCreation dispatch = {dispatch} tag={state.tag} error={state.error}/>}
+                {index === 7 &&  <button className='btn btn-primary'>Enter</button>}
                 </div>
             </div>
             <div className='row no-padding justify-content-center mediumMargin'>
                 <div className='offset-4 col-7'>
-                {index!==5
+                {(index === 4 && state.city ==='')
+                ? <button className='btn btn-primary' disabled>Next</button>
+                :((index!= 6 && index != 7)
                   ?  <SubmitBtn 
-                        nextQuestion = {()=>dispatch({type : 'next'})}
+                        nextQuestion = {()=>dispatch({type : NEXT})}
                         index = {index}
-                        beforeLastNumQues = {5}
+                        beforeLastNumQues = {6}
                         submitHandler = {()=>dispatch({type:'submit'})}
                     />
-                 : <TagsBtn tag = {state.tag} dispatch={dispatch}/>
+                 : (index != 7 && <TagsBtn tag = {state.tag} dispatch={dispatch} finishHandler={finishHandler}/>)
+                )
                 }
                 </div>
             </div>
