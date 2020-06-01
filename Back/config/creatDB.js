@@ -1,10 +1,11 @@
+require('dotenv').config()
 var mysql = require('mysql2');
 
 var con = mysql.createConnection({
-    host            : "localhost",
-	user 			: "root",
-	password 		: "roooot",
-	port    		: '5555',
+	host            : process.env.MYSQLHOST,
+	user 		: process.env.MYSQLUSER,
+	password 	: process.env.MYSQLPASSWORD,
+	port    	: process.env.MYSQLPORT,
 	connectTimeout	: 0
 });
 
