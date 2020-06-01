@@ -13,6 +13,17 @@
 * Back: nodejs avec Express as framework
 * DB: Mysql
 
+## the fakeDatas creatation:
+* In order to begin the project, we need at least 500+ fake profiles data, each profile has a fake photo, name, adress, login, sex, sex_orientation, age, birthday. The final data are stored in Back/data/dummy-datas. The following list are the technologies that I used to create all fake data, but the source code are not included inside of this repo:
+  - faker: I use faker to generate base fake information
+  - bcypt: to genetate hash fake password
+  - uuid: to generation ramdom tocken for the user indentification
+  - cheerio: I use cheerio to scraping the model's website, so I can get nice profile pictures. ;)
+  - randomLocation: I use randomLocation to get latitude and longitude of a random place within 700km of NotreDame de Paris.
+  - NodeGocoder : I use NodeGeocoder to get the detail geo information like the city name, street name, postal number from a place with its latitude and longitude information. I found that their data are very precise and complete compared to other API.
+  
+  
+
 ## to test the project:
 * you need to have the local mysql server. 
 * under both Front/Back direction to start the npm
