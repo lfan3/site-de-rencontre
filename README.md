@@ -9,7 +9,7 @@
 * the pages with questions during inscription will allow the calculte their compatibility
 
 ## the technolgies for creating this site:
-* Font: react. The site is a training project. Donc I have used both classic react and react hook for training purpose. So the code is not very consistency.
+* Font: react. The site is a training project. Donc I have used both classic react ,react hook, reac router for training purpose. So the code is not very consistency.
 * Back: nodejs avec Express as framework
 * DB: Mysql
 
@@ -37,6 +37,6 @@
 
 ### framework for font: bootstrap4 et jquery.
   
-## to test the project:
+## to test the project:(work not finish yet)
 * you need to have the local mysql server. 
 * under both Front/Back direction to start the npm
