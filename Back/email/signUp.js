@@ -2,7 +2,7 @@ require('dotenv').config()
 const randomstring = require('randomstring')
 const sendMail = require('./sendEmail').sendMail
 const mailTemplate = require('./email_template')
-const pool = require('../config/pool')
+const {pool} = require('../config/pool')
 const hashpass = require('../utilites/hashpass').hashpass
 
 const SERVER_EMAIL = process.env.EMAIL_SENDER
@@ -25,7 +25,6 @@ async function addNewUser(data){
         console.log('inside addNewUser')
         //clean data with escaping query=>prevent SQL injection attack
         let exiting_user = await check_existing_use(data.email)
-        console.log(exiting_user)
         if(!exiting_user){
             let info = await pool.query('INSERT INTO logins SET ?', data)
             return({success : 'new user is added to the DB'})

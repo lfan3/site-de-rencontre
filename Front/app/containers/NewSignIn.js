@@ -8,7 +8,7 @@ import {Redirect} from 'react-router-dom'
 import {SessionConsumer} from '../contexts/sessionContext'
 
 const initialState = {
-    userId: '',
+    loginId: '',
     email : '',
     password : '',
     verified : false,
@@ -34,7 +34,7 @@ const registerReducer = (state, action)=>{
         if(action.data){
             return({
                 ...state,
-                userId : action.data,
+                loginId : action.data,
                 verified : true,
                 loading : false
             })
@@ -82,12 +82,13 @@ function Register(){
             
             Axios(auth).then((resp)=>{
                 console.log('inside the handleSubmit of new signein')
-                let userId = resp.data.user
-                localStorage.setItem('userId', userId)
-                if(resp.data.user === undefined)
+                console.log(resp)
+                let {loginId}= resp.data
+                localStorage.setItem('loginId', loginId)
+                if(!loginId)
                     dispatch({type: 'error', error : {info: 'User does not exist'}})
                 else{
-                    dispatch({ type : 'success', data : resp.data.user})
+                    dispatch({ type : 'success', data : loginId})
                 }
             }).catch((error)=>dispatch({type : 'error', error : error}))
         }else{

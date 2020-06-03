@@ -3,7 +3,6 @@ import {SignInForm, SignUpForm} from './SignForms'
 import Axios from 'axios';
 import {Switch, NavLink, Link, Route} from 'react-router-dom'
 import SignUp from '../../containers/SignUp'
-import SignIn from '../../containers/SignIn'
 import NewSignIn from '../../containers/NewSignIn'
 import { sign } from 'crypto';
 const activeStyle = {

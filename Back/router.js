@@ -26,7 +26,9 @@ const {
     getAllTags,
     getFrenchCities,
     getArrondParis,
-    insertNewUser
+    insertNewUser,
+    emailIsVerified,
+    signInVerification
     } = require('./data/api')
 
 
@@ -34,11 +36,44 @@ router.get('/', (req, res)=>{
     res.send("Soket ")
 })
 router.post('/signup', signUp)
-router.get('/signin', (req, res)=>{
+/*
+app.post('/signin', (req, res, next)=>{
+    console.log('Inside Post/Login callback function')
+    console.log('req.body: ')
+    console.log(req.body)
+    passport.authenticate('local', (err, user, info)=>{
+        if(info) {console.log(info.message);return res.send(info.message)}
+        if(err) {console.log(err);return next(err)}
+        if(!user) {return res.redirect('/login')}
+        req.login(user, (err)=>{
+            console.log('Inside req.login() callback')
+            console.log(req.sessionID)
+            console.log(JSON.stringify(req.session.passport))
+            console.log(JSON.stringify(req.user))
+            if(err){
+                return next(err)
+            }
+            return res.redirect('/authrequired')
+        })
+        })(req, res, next)
+}
+*/
+//todo test signin
+router.post('/signin', (req, res)=>{
     console.log('inside the signin get callback function')
-    //console.log(req.sessionID)
-    //res.send('env ' + process.env.CLOUD_NAME)
-    res.send('singin')
+    //console.log(req.body)
+    //console.log(req.session)
+    signInVerification(req.body).then(resp=>{
+        req.session.loginId = resp
+        console.log(resp, req.session.loginId)
+        res.json({loginId: req.session.loginId})
+    }).catch((e)=>res.json({error: 'user is not validated, please retry'}))
+    //req.session.userId 
+})
+router.post('/email_verify', (req, res)=>{
+    emailIsVerified(req.body)
+    .then(()=>res.send('email verified'))
+    .catch((e)=>res.json({error: 'something is wrong, please retry'}))
 })
 router.get('/logout', (req, res)=>{
     req.session.destroy()

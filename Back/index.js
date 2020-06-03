@@ -33,40 +33,7 @@ cloudinary.config({
     api_key : process.env.API_KEY,
     api_secret: process.env.API_SECRET
 })
-/*
-passport.use(new LocalStrategy(
-    {usernameField: 'email'},
-    (email, password, done) => {
-        console.log('inside the local strategie callback')
-        //test to grab user from database
-        //name: DB.findByEmail()
-        var data = DBfindByEmail(email)
-        //data.then ==> will call deserialize
-        data.then((res)=>{
-            let user = res[0]
-            if(!user)
-                return done(null, false, {message : 'invalide'})
-            if(!bcrypt.compareSync(password, user.password))
-                return done(null, false, {message : 'invalide password'})
-            //null is erro object, and then user object
-            //done ===> will call sterilize to store the data
-            return done(null, user)
-        })
-    }
-))
-passport.serializeUser((user, done)=>{
-    console.log('inside the serilize cb')
-    console.log(user.id)
-    //stock user Id
-    done(null, user.id)
-})
-passport.deserializeUser((id, done)=>{
-    console.log('inside the deserialize')
-    get_auth_user(id)
-    .then((res)=>{done(null, res[0]);console.log('deserialize')})
-    .catch(error => done(error))
-})
-*/
+
 app.use(cors({
     origin : 'http://localhost:8081',
     methods : ['GET', 'POST'],
@@ -89,47 +56,20 @@ app.use(session({
     saveUninitialized: true
 }))
 */
-app.use(passport.initialize())
-app.use(passport.session())
-app.use(router)
-/*
-app.post('/signin', (req, res, next)=>{
-    console.log('Inside Post/Login callback function')
-    console.log('req.body: ')
-    console.log(req.body)
-    passport.authenticate('local', (err, user, info)=>{
-        if(info) {console.log(info.message);return res.send(info.message)}
-        if(err) {console.log(err);return next(err)}
-        if(!user) {return res.redirect('/login')}
-        req.login(user, (err)=>{
-            console.log('Inside req.login() callback')
-            console.log(req.sessionID)
-            console.log(JSON.stringify(req.session.passport))
-            console.log(JSON.stringify(req.user))
-            if(err){
-                return next(err)
-            }
-            return res.redirect('/authrequired')
-        })
-        })(req, res, next)
-})
-app.get('/authrequired', (req, res)=>{
-    console.log('inside authrequire')
-    console.log(`user authentificated? ${req.isAuthenticated()}`)
-    if(req.isAuthenticated()){
-        console.log('user is authenticated')
-        //sign userId to express sesssion. so that we can get assces to everywhere
-        req.session.userId = req.session.passport
-        res.send(req.session.passport)
-    }
-    else{
-        console.log('user is not autenticated')
-        res.send({user: null})
-        res.redirect('/')
-    }
-})
-*/
+const THREE_HOURS = 1000 * 60 * 60 * 3
 
+app.use(session({
+    secret: process.env.SESSION_KEY,
+    resave : false,
+    saveUninitialized:true,
+    cookie:{
+        maxAge : THREE_HOURS,
+        secure:true
+    }
+}))
+app.use(router)
+
+//socket part
 let users = []
 let messages = []
 const addUser = ({id, userA, name,room})=>{

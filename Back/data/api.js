@@ -5,6 +5,11 @@ const {formDateFormat,
         filterTags,
         getFinalCity,
 } = require('./BQApi_helpers')
+const {valideEmailReg, validePassReg} = require('./RegexValidator')
+const bcrypt = require('bcrypt')
+//var util = require('util')
+//
+//bcrypt.compare = util.promisify(bcrypt.compare)
 
 //! match_question part
 async function insertMatchQuestion(questionsObj){
@@ -618,6 +623,76 @@ let conditions =
 //filterUsers(conditions)
 //findMatchedUsers(conditions)
 
+/***********************signUp API + signIn API****************************
+ * email verification to confirme the subscription 
+ * change is_verified of login to 1
+ 
+**************************************************************************/
+
+async function emailIsVerified(data){
+    try{
+        let {email, tocken} = data
+        let query = "SELECT email FROM `logins` WHERE tocken = ? AND email=?"
+        let result = await pool.query(query, [tocken, email])
+        if(!result.length)
+            throw new Errors.NotFound('email is not verified')
+        else{
+            let query2 = `UPDATE logins SET is_verified = 1 WHERE email = '${email}'`
+            await pool.query(query2)
+        }
+        return true
+    }catch(e){
+        if(e instanceof Errors.NotFound)
+            throw new Errors.NotFound(e.message)
+        else{
+            throw new Error('emailIsVerified error '+e)
+        }
+    }
+}
+//todo signup input validation
+async function signInVerification(data){
+    try{
+        console.log(data)
+        let {email, password} = data
+        if(valideEmailReg.test(email) && validePassReg.test(password)){
+            let query = `SELECT id, email, password FROM logins WHERE email= ?` 
+            let res = await pool.query(query, [email])
+            if(!res)
+                throw new Errors.NotFound('signInVerification is not verified')
+            let result = await bcrypt.compare(password, res[0].password)
+            if(result)
+                return res[0].id
+            else
+                return false
+        }else{
+            throw new Error('signInverification Error '+e)
+        }
+    }catch(e){
+        if(e instanceof Errors.NotFound)
+            throw new Errors.NotFound(e.message)
+        else
+            throw new Error('signInverification Error '+e)
+    }
+}
+//signInVerification({ email: 'korosab626@qortu.com', password: 'Aa123@' })
+//.then(res=>console.log(res))
+let data = {
+    confirm: false,
+    email: 'korosab626@qortu.com',
+    tocken: '2Exa9ltkrm1wRxxv8wXZ3jWlNvnUAvba'
+}
+/*
+var hashpass = async (pass) => {
+    try{
+        let hash = await bcrypt.hash(pass, 10);
+        return hash;
+    }catch(err){
+        console.log(`Error in hashpass ${err}`)
+    }
+}
+let hash = hashpass('A')
+*/
+exports.emailIsVerified = emailIsVerified
 exports.fetchAllPhotos = fetchAllPhotos
 exports.fetchOtherPhotos = fetchOtherPhotos
 exports.filterUsers = filterUsers
@@ -638,3 +713,4 @@ exports.getAllTags = getAllTags
 exports.getFrenchCities = getFrenchCities
 exports.getArrondParis = getArrondParis
 exports.insertNewUser = insertNewUser
+exports.signInVerification = signInVerification
