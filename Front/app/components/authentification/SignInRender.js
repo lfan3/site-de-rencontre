@@ -1,7 +1,8 @@
 import React from 'react'
 import {Link } from 'react-router-dom'
-
+//todo: loginId userId, both defined, login defined, userId not defined, get ids from local or API
 const SignInRender = (props)=>{
+    let {loginId, userId} = props
     let {handleChange, handleSubmit, verified, password, email, error} = props
     return(
         <div>
@@ -40,9 +41,9 @@ const SignInRender = (props)=>{
                             {error.info && <div>{error.info}</div>}
                         </div>
                     }
-                    {verified &&
+                    {(verified && loginId && !userId)&&
                         <div className = 'whiteLetters'>
-                            <Link to= '/main' style= {{color: 'white'}} >Begin the love story</Link>
+                            <Link to= '/baseq' style= {{color: 'white'}} >Next Step</Link>
                         </div>
                     }
                 </form>

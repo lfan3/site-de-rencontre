@@ -64,9 +64,9 @@ router.post('/signin', (req, res)=>{
     //console.log(req.body)
     //console.log(req.session)
     signInVerification(req.body).then(resp=>{
-        req.session.loginId = resp
-        console.log(resp, req.session.loginId)
-        res.json({loginId: req.session.loginId})
+        req.session.loginId = resp.loginId
+        req.session.userId = resp.userId
+        res.json({loginId: req.session.loginId, userId: req.session.userId})
     }).catch((e)=>res.json({error: 'user is not validated, please retry'}))
     //req.session.userId 
 })

@@ -650,23 +650,38 @@ async function emailIsVerified(data){
     }
 }
 //todo signup input validation
+async function checkLogin({email, password}){
+    if(valideEmailReg.test(email) && validePassReg.test(password)){
+        //check login table
+        let query = `SELECT id, email, password FROM logins WHERE email= ?` 
+        let res = await pool.query(query, [email])
+        if(!res)
+            throw new Errors.NotFound('checkLogin is not verified')
+        let result = await bcrypt.compare(password, res[0].password)
+        if(result){
+            return res[0].id
+        }
+        else
+            return false
+    }else{
+        throw new Error('signInverification Error '+e)
+    }
+}
+async function checkUser(loginId){
+    let query = `SELECT id FROM users WHERE login_id= ?` 
+    let res = await pool.query(query, [loginId])
+    if(!res[0])
+        return false
+    return res[0].id
+}
+
 async function signInVerification(data){
     try{
         console.log(data)
-        let {email, password} = data
-        if(valideEmailReg.test(email) && validePassReg.test(password)){
-            let query = `SELECT id, email, password FROM logins WHERE email= ?` 
-            let res = await pool.query(query, [email])
-            if(!res)
-                throw new Errors.NotFound('signInVerification is not verified')
-            let result = await bcrypt.compare(password, res[0].password)
-            if(result)
-                return res[0].id
-            else
-                return false
-        }else{
-            throw new Error('signInverification Error '+e)
-        }
+        let loginId = await checkLogin(data)
+        let userId = await checkUser(loginId)
+        console.log(loginId, userId)
+        return ({loginId, userId})
     }catch(e){
         if(e instanceof Errors.NotFound)
             throw new Errors.NotFound(e.message)

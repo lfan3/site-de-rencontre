@@ -9,6 +9,7 @@ import {SessionConsumer} from '../contexts/sessionContext'
 
 const initialState = {
     loginId: '',
+    userId:'',
     email : '',
     password : '',
     verified : false,
@@ -34,7 +35,8 @@ const registerReducer = (state, action)=>{
         if(action.data){
             return({
                 ...state,
-                loginId : action.data,
+                loginId : action.data.loginId,
+                userId: action.data.userId,
                 verified : true,
                 loading : false
             })
@@ -83,12 +85,14 @@ function Register(){
             Axios(auth).then((resp)=>{
                 console.log('inside the handleSubmit of new signein')
                 console.log(resp)
-                let {loginId}= resp.data
+                let {loginId, userId}= resp.data
                 localStorage.setItem('loginId', loginId)
+                //first login, userId = false
+                localStorage.setItem('userId', userId)
                 if(!loginId)
                     dispatch({type: 'error', error : {info: 'User does not exist'}})
                 else{
-                    dispatch({ type : 'success', data : loginId})
+                    dispatch({ type : 'success', data : {loginId, userId}})
                 }
             }).catch((error)=>dispatch({type : 'error', error : error}))
         }else{

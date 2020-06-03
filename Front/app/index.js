@@ -23,14 +23,18 @@ import Csv from './dataCSV/csvD3React'
 
 function App(){
         //need to add an autherified varible to know wether the user is loged in to enter main component
-
+        let loginId = localStorage.getItem('loginId')
+        let userId = localStorage.getItem('userId')
         return(
             <Router>
                 <Switch>
                        
-                            <Route path = '/' exact component = {Register}/>
+                            {(loginId && userId)
+                            ? <Route path = '/' exact component = {Register}/>
+                            : <Route path = '/' exact component = {Main}/>
+                            }
                             <Route path = '/signin' component = {Register}/>
-                            <Route path = '/main' exact component = {Main}/>
+                            {/*<Route path = '/main' exact component = {Main}/>*/}
                             <Route path = '/photo' component = {Photo}/>
                             <Route path = '/perso' component = {Perso}/>
                             <Route path = '/confirm/:email/:tocken' component = {EmailConfirm}/>
