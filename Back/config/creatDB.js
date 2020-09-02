@@ -8,12 +8,14 @@ var con = mysql.createConnection({
 	port    	: process.env.MYSQLPORT,
 	connectTimeout	: 0
 });
-
+//console.log('data: ' + process.env.MYSQLHOST);
 con.connect(function(err) {
     if (err) throw err;
-    var query = "CREATE DATABASE Macha";
+    var query = "CREATE DATABASE Matcha";
     con.query(query, function(err, result){
         if(err) throw err;
-        console.log('Macha created');
+        console.log('Matcha created');
     });
 });
+
+

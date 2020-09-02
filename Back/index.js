@@ -11,7 +11,6 @@ const path = require('path')
 const bodyParser = require('body-parser')
 
 const router = require('./router')
-//CROS polity
 
 const cors = require('cors')
 const cloudinary = require('cloudinary')
@@ -35,7 +34,7 @@ cloudinary.config({
 })
 
 app.use(cors({
-    origin : 'http://localhost:8081',
+    origin : 'http://localhost:8085',
     methods : ['GET', 'POST'],
     credentials:true
 }));
@@ -67,7 +66,8 @@ app.use(session({
         secure:true
     }
 }))
-app.use(router)
+//app.use(router)
+app.use(require('./routers/index.routers'))
 
 //socket part
 let users = []

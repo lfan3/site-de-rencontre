@@ -1,5 +1,7 @@
 # This is a site de rencontre project.
 
+## Architecture MVC, MVCS possible 
+
 ## The main parts:
 * inscription and connexion
 * a profile page for user to change their informations
@@ -40,3 +42,5 @@
 ## to test the project:(work not finish yet)
 * you need to have the local mysql server. 
 * under both Front/Back direction to start the npm
+
+

@@ -2,3 +2,5 @@ Front/node_modules
 Back/node_modules
 Back/.env
 Back/data/.env
+Back/config/.env
+Back/data/initData/.env

@@ -144,18 +144,19 @@ let matchQuestions = "CREATE TABLE IF NOT EXISTS match_question(\
                     );"
 
 let tables = [
-    //Logins, 
-    //Users, 
-    //Photos, 
-    //Tags, 
-    //Logins_Tags, 
-    //Likes, 
-    //profileText, 
-    //single_like,
-    //mutual_like,
-    //messages,
+    Logins, 
+    Users, 
+    Photos, 
+    Tags, 
+    Logins_Tags, 
+    Likes, 
+    profileText, 
+    single_like,
+    mutual_like,
+    messages,
     matchQuestions
 ]
+
 pool.getConnection((err, connection) => {
     if (err) {
         if (err.code === 'PROTOCOLE_CONNECTION_LOST')
@@ -165,8 +166,8 @@ pool.getConnection((err, connection) => {
         if (err.code === 'ECONNREFUSED')
             console.error('Dababase Connection was refused');
     }
-    tables.map((query, index)=>{
-        connection.query(query, function(err, result, fields){
+    tables.map((queryTxt, index)=>{
+        connection.query(queryTxt, function(err, result, fields){
             if(err) throw new Error(err);
             console.log( index + 'created');
             connection.release();

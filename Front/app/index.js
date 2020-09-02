@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react';
 import ReactDOM from 'react-dom'
-import './index.css'
+import './style/index.css'
 import {BrowserRouter as Router,Switch, Route, Redirect} from 'react-router-dom'
 import Photo from './components/photos/Photo'
 import PhotoTuto from './components/photos/Photo_tuto'

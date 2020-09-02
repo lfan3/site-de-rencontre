@@ -36,6 +36,8 @@ router.get('/', (req, res)=>{
     res.send("Soket ")
 })
 router.post('/signup', signUp)
+
+
 /*
 app.post('/signin', (req, res, next)=>{
     console.log('Inside Post/Login callback function')

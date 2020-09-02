@@ -1,10 +1,10 @@
-const {pool} = require('../config/pool')
+const {pool} = require('../../config/pool')
 const fs = require('fs')
-const users = JSON.parse(fs.readFileSync('./dummy_user.json'))
-const photos = JSON.parse(fs.readFileSync('./dummy_avatars_new.json'))
-const logins = JSON.parse(fs.readFileSync('./dummy_login.json'))
-const tags = JSON.parse(fs.readFileSync('./dummy_tags.json'))
-const descrip = require('./dummy_texts')
+const users = JSON.parse(fs.readFileSync('../dummy_datas/dummy_user.json'))
+const photos = JSON.parse(fs.readFileSync('../dummy_datas/dummy_avatars_all.json'))
+const logins = JSON.parse(fs.readFileSync('../dummy_datas/dummy_login.json'))
+const tags = JSON.parse(fs.readFileSync('../dummy_datas/dummy_tags.json'))
+const descrip = require('../dummy_datas/dummy_texts')
 //datas from big_dummy seperate files
 
 //create queries functions
@@ -189,6 +189,6 @@ async function fillAllTables(){
 //! csvToMysql.js setup arrondissemnts datas/tables
 //! vill_france_free.sql setup the all the cities data.
 
-//fillAllTables();
-fill_login_tag_func(loginTagQuery())
+fillAllTables();
+//fill_login_tag_func(loginTagQuery())
 
