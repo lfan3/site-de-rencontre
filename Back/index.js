@@ -10,7 +10,7 @@ const io = soketio(server)
 const path = require('path')
 const bodyParser = require('body-parser')
 
-const router = require('./router')
+//const router = require('./router')
 
 const cors = require('cors')
 const cloudinary = require('cloudinary')

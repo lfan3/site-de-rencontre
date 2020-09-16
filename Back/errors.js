@@ -6,6 +6,14 @@ class NotFound extends Error{
     }
 }
 
+class Existed extends Error{
+    constructor(message){
+        super(message)
+        this.name='Existed'
+        Error.captureStackTrace(this, Existed)
+    }
+}
 module.exports = {
-    NotFound
+    NotFound,
+    Existed
 }

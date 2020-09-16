@@ -7,8 +7,6 @@ router.post('/', UserControler.getUserById);
 //router.post('/authenticate', UserControler);
 
 //test
-router.get('/test',(req,res)=>{
-    console.log('test');
-})
+router.post('/signup', UserControler.signUp);
 
 module.exports = router;

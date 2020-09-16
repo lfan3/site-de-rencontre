@@ -1,7 +1,6 @@
 require('dotenv').config()
 const randomstring = require('randomstring')
 const sendMail = require('./sendEmail').sendMail
-const mailTemplate = require('./email_template')
 const {pool} = require('../config/pool')
 const hashpass = require('../utilites/hashpass').hashpass
 
@@ -19,7 +18,7 @@ async function check_existing_use(data){
         console.log('Error in check_existing_user' + e)
     }
 }
-
+/*
 async function addNewUser(data){
     try{
         console.log('inside addNewUser')
@@ -36,7 +35,7 @@ async function addNewUser(data){
         console.log(`Error in addNewUser ${err}`)
     }
 }
-
+*/
 async function DBfindByEmail(email){
     try{
         let data = await pool.query('SELECT id, email, password, tocken FROM logins WHERE email= ?', [email])
@@ -55,7 +54,7 @@ async function get_auth_user(id){
 }
 
 
-
+/*
 const signUp = (req, res)=>{
     console.log('inside the signUp.js')
         res.header("Access-Control-Allow-Origin", "http://localhost:8081")
@@ -84,6 +83,7 @@ const signUp = (req, res)=>{
         }).catch((e)=>{console.log('error in hashpass '+e)})
 }
 exports.signUp = signUp
+*/
 exports.DBfindByEmail = DBfindByEmail
 exports.get_auth_user = get_auth_user
 

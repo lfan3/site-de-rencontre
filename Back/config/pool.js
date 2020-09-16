@@ -1,6 +1,7 @@
+require('dotenv').config();
+
 var mysql = require('mysql2');
 var util = require('util');
-require('dotenv').config();
 
 /*
 var pool = mysql.createPool({
@@ -18,13 +19,19 @@ var pool = mysql.createPool({
 	user 		: process.env.MYSQLUSER,
 	password 	: process.env.MYSQLPASSWORD,
 	port    	: process.env.MYSQLPORT,
-        database        : 'matcha'
+	//database        : 'matcha'
+	database : "mat1"
 });
 
 //! Two ways to create a promisify mysql connections
 
 const promisePool = pool.promise()
 pool.query = util.promisify(pool.query)
+/*
+let query = 'SELECT * FROM logins WHERE email = fifidema'  
+pool.query(query).then(res => console.log(res))
+console.log(process.env.MYSQLUSER)
+*/
 module.exports.pool = pool
 module.exports.promisePool = promisePool
 
