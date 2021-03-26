@@ -38,9 +38,50 @@
 * for training propose, the react writing style are quite mixed: use tradictional class, class-properties-proposal, hook.
 
 ### framework for font: bootstrap4 et jquery.
-  
+
+### dotenv and .env
+* the config variable stocked in .env and we get access to them with dotenv.
+* one cavea is that when I start a script 'node createDB.js' in the direction of Back/config/, since there is no .env, so we do not have access to env varialbe. 
+* solution: start the command node from the direciton where stock the .env
+
+* the same problem can be happen for data/initData/dataSetup:
+* need to lancer le node depuis le root, as .env is in the root, and the relative path of dummydata is relative to the root too.
+
+### typescript part
+* description: inorder to use some design pattern and create clean code, I integrated typescript here.
+* nessessary packages: typescript, @types/express (for express)
+* add to package.json
+    <code>
+    "scripts": {
+            "tsc": "tsc"
+          },
+    </code>
+* shell command: 
+  * init a tsconfig.json : npm run tsc -- --init 
+  * to transpile Typescript : npm run tsc 
+  * use ts-node to executing ts without transpile only for dev env : npm install -g ts-node
+  * ts-node script.ts
+* class nomination with Maj, but the file is in Miniscule
+* Expresso : 
+  * !! operation, if var a = null/undefined/0/'' and var a, !!a = false, !a =true
+  * attention: for a = [] or {} is contrary, !!a = true, !a = false
+  * !! can be used to juge wether a value base variable is declared and nullable value
+
 ## to test the project:(work not finish yet)
 * you need to have the local mysql server. 
 * under both Front/Back direction to start the npm
 
+
+### todo
+* restructurer les routes et controllers, api
+* refaire une jolie front
+* a voir la détaille par rapport a match priority
+
+* routes: security(inscrire, loginIn), user(public, privé), match(voir les photos, filter), notification(), chat(fixe sur footer chaque page) 
+* create a base controller and hiereate it from all other controllers
+* redo model et repositories
+* authentification / do security controller
+* redo the controller and router
+* les modules commun de la part de front
+* les functions back
 
