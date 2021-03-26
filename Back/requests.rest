@@ -4,3 +4,12 @@ Content-Type: application/json
 {
     "userId": "116551321"
 }
+
+###
+POST http://localhost:5000/test
+Content-Type: application/json
+
+{
+    "username" : "linfan",
+    "password" : "123456"
+}

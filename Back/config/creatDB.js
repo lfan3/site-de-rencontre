@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config();
 var mysql = require('mysql2');
 
 var con = mysql.createConnection({
@@ -11,11 +11,12 @@ var con = mysql.createConnection({
 //console.log('data: ' + process.env.MYSQLHOST);
 con.connect(function(err) {
     if (err) throw err;
-    var query = "CREATE DATABASE Matcha";
+    var query = "CREATE DATABASE IF NOT EXISTS Matcha";
     con.query(query, function(err, result){
         if(err) throw err;
         console.log('Matcha created');
     });
 });
+
 
 
