@@ -89,5 +89,6 @@
 * authentification / do security controller
 * les modules commun de la part de front
 * les functions back
+* getter and setter for entity:https://khalilstemmler.com/blogs/typescript/getters-and-setters/
 
 
