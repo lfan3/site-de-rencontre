@@ -67,21 +67,27 @@
   * attention: for a = [] or {} is contrary, !!a = true, !a = false
   * !! can be used to juge wether a value base variable is declared and nullable value
 
+### database
+* my problem consiste of how to acces to mysql of bitnamie
+* to access to local mariadb : sudo mariadb or sudo mysql
+* to access to bitnamie mysql, dans le dir /bitnamie/mysql : bin/mysql -u root -p
+* the two bases de données ne sont pas les mêmes.
+
 ## to test the project:(work not finish yet)
 * you need to have the local mysql server. 
 * under both Front/Back direction to start the npm
 
-
 ### todo
+* transfert les function dans router.js and api to service/new structure
+  * add user model interface , import to service
+  * solve the problem of filterUsers type related
 * restructurer les routes et controllers, api
 * refaire une jolie front
 * a voir la détaille par rapport a match priority
-
+* create base service by inspired from basecontroller write baseService error
 * routes: security(inscrire, loginIn), user(public, privé), match(voir les photos, filter), notification(), chat(fixe sur footer chaque page) 
-* create a base controller and hiereate it from all other controllers
-* redo model et repositories
 * authentification / do security controller
-* redo the controller and router
 * les modules commun de la part de front
 * les functions back
+
 
