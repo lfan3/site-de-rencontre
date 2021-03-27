@@ -11,15 +11,35 @@ class Circle {
     }
     public clientError (message?: string) {
         return this.jsonResponse(400, 'abc');
-      }
+    }
+    public showChildeName(){
+        return this.constructor.name;
+    }
 }
 
 class R extends Circle{
+    private n:number;
+    constructor(nu:number){
+        super();
+        this.n = nu
+    }
 
 }
 
 
-let c = new R();
-c.jsonResponse(600, 'afd')
-c.clientError()
+let c = new R(2);
+c.showChildeName();
+// c.jsonResponse(600, 'afd')
+// c.clientError()
+
+interface LabeledValue {
+    label: string;
+}
+  
+function printLabel(labeledObj: LabeledValue) {
+  console.log(labeledObj.label);
+}
+  
+let myObj = { size: 10, label: "Size 10 Object" };
+//printLabel(myObj);
 

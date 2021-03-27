@@ -1,5 +1,5 @@
 import { UserController } from './user.controller'
+import { MatchController } from './match.controller'
 
-const userController = new UserController();
-
-export {userController};
+export const userController = new UserController();
+export const matchController = new MatchController();

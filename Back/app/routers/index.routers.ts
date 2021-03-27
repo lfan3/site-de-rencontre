@@ -1,15 +1,13 @@
 //test
-import {userController} from '../controllers/index.controllers'
 import express from 'express'
+import {UserRouter} from './user.router'
+import {MatchRouter} from './match.router'
 
-const router =express.Router();
+const RootRouter =express.Router();
+/* collection of routes*/
+//RootRouter.use('/match', MatchRouter);
+RootRouter.use('/users', UserRouter);
+RootRouter.use('/match', MatchRouter);
 
-router.post('/test',(req, res)=>{
-    userController.execute(req, res)
-})
 
-router.post('/test',(req, res)=>{
-    userController.execute(req, res)
-})
-
-export {router} 
+export {RootRouter};

@@ -10,7 +10,7 @@ require('dotenv').config()
 import express from 'express';
 import bodyParser from "body-parser";
 import http from 'http';
-import {router} from "./routers/index.routers"
+import {RootRouter} from "./routers/index.routers"
 
 const app = express();
 const server = http.createServer(app);
@@ -18,7 +18,7 @@ const server = http.createServer(app);
 app.use(bodyParser.json({limit : '10mb'}))
 app.use(bodyParser.urlencoded({extended : true, limit : '10mb'}));
 
-app.use(router);
+app.use(RootRouter);
 
 
 //at first i use app.listen(), but that does not work
