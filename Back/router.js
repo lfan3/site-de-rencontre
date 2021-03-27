@@ -88,6 +88,10 @@ router.post('/session', (req, res)=>{
     //res.send(req.session.userId)
     res.send({data : 'ok from server'})
 })
+
+
+
+//!done in macht, the path is not main anymore but /match
 router.post('/main', (req, res)=>{
     //const results = fetchAllPhotos()
     let userId = req.body.userId
@@ -98,6 +102,7 @@ router.post('/main', (req, res)=>{
         res.send(users)
     })
 })
+
 //test next 3 function
 let foo = ()=> new Promise((res)=>{
     setTimeout(() => res('foo'), 200);

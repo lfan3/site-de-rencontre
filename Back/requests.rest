@@ -6,10 +6,18 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:5000/test
+POST http://localhost:5000/users
 Content-Type: application/json
 
 {
     "username" : "linfan",
     "password" : "123456"
+}
+
+###
+POST http://localhost:5000/match
+Content-Type: application/json
+
+{
+    "userId" : "0"
 }

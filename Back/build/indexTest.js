@@ -19,7 +19,7 @@ var app = express_1.default();
 var server = http_1.default.createServer(app);
 app.use(body_parser_1.default.json({ limit: '10mb' }));
 app.use(body_parser_1.default.urlencoded({ extended: true, limit: '10mb' }));
-app.use(index_routers_1.router);
+app.use(index_routers_1.RootRouter);
 //at first i use app.listen(), but that does not work
 server.listen(5000, function () {
     console.log('running on 5000');

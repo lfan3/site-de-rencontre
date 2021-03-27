@@ -51,15 +51,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MatchController = void 0;
+exports.MainController = void 0;
 var base_controller_1 = require("./base.controller");
-var index_services_1 = require("../services/index.services");
-var MatchController = /** @class */ (function (_super) {
-    __extends(MatchController, _super);
-    function MatchController() {
+var MainController = /** @class */ (function (_super) {
+    __extends(MainController, _super);
+    function MainController() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    MatchController.prototype.executeImpl = function (req, res) {
+    MainController.prototype.executeImpl = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, username, password;
             return __generator(this, function (_b) {
@@ -76,22 +75,6 @@ var MatchController = /** @class */ (function (_super) {
             });
         });
     };
-    MatchController.prototype.fetchUsersPhotos = function (req, res) {
-        //todo the api is called on main, need to change that from front part
-        //make fetchuserphotos to service
-        //adapte the success on basecontroller
-        //fetchUser is a test, need to get fetchusersphoto
-        try {
-            var userId = req.body.userId;
-            index_services_1.matchService.fetchUserPhotos(userId)
-                .then(function (res) {
-                console.log(res);
-            });
-        }
-        catch (err) {
-            return this.fail(res, err.toString());
-        }
-    };
-    return MatchController;
+    return MainController;
 }(base_controller_1.BaseController));
-exports.MatchController = MatchController;
+exports.MainController = MainController;

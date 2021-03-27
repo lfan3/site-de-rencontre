@@ -33,13 +33,14 @@ c.showChildeName();
 // c.clientError()
 
 interface LabeledValue {
+    size : number;
     label: string;
 }
   
 function printLabel(labeledObj: LabeledValue) {
-  console.log(labeledObj.label);
+  console.log(labeledObj);
 }
   
 let myObj = { size: 10, label: "Size 10 Object" };
-//printLabel(myObj);
+printLabel(myObj);
 

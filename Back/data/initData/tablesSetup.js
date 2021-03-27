@@ -1,4 +1,4 @@
-var {pool} = require('../../config/pool');
+const {pool} = require('../../config/pool');
 
 //!Expresso: mysql name convention : table and db's name, singuler, lower case, connected with underscore
 //   INDEX par_ind (parent_id),\
@@ -88,7 +88,7 @@ const Likes = "CREATE TABLE IF NOT EXISTS likes( \
 
 const bio_courte = "CREATE TABLE IF NOT EXISTS bio_courte(\
                     id INT NOT NULL AUTO_INCREMENT,\
-                    descrip TEXT(2500) NOT NULL, \
+                    bioCourte TEXT(2500) NOT NULL, \
                     user_id INT NOT NULL,\
                     PRIMARY KEY (id),\
                     FOREIGN KEY (user_id)\

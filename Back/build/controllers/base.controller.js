@@ -61,6 +61,28 @@ var BaseController = /** @class */ (function () {
             });
         });
     };
+    //?is here any sens to declared in static?? do we need to call it even the object has not been constructed yet
+    BaseController.jsonResponse = function (res, statusCode, message) {
+        return res.status(statusCode).json({ message: message });
+    };
+    BaseController.prototype.clientError = function (res, message) {
+        return BaseController.jsonResponse(res, 401, message ? message : 'some Error from client side');
+    };
+    BaseController.prototype.unauthorized = function (res, message) {
+        return BaseController.jsonResponse(res, 401, message ? message : 'nauthorized');
+    };
+    BaseController.prototype.notFound = function (res, message) {
+        return BaseController.jsonResponse(res, 404, message ? message : 'Not found');
+    };
+    BaseController.prototype.success = function (res, dto) {
+        if (!!dto) {
+            res.type('application/json');
+            return res.status(200).json(dto);
+        }
+        else {
+            return res.sendStatus(200);
+        }
+    };
     BaseController.prototype.fail = function (res, error) {
         console.log(error);
         return res.status(500).json({

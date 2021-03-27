@@ -16,13 +16,10 @@ export class MatchController extends BaseController {
     }
   }
 
-  public fetchUsersPhotos(req: express.Request, res: express.Response){
-      //todo the api is called on main, need to change that from front part
-      //make fetchuserphotos to service
-      //adapte the success on basecontroller
-      //fetchUser is a test, need to get fetchusersphoto
+  public fetchUserPhotosByUserId(req: express.Request, res: express.Response){
+    //todo adapte the success on basecontroller
+    const {userId} = req.body;
     try{
-        const {userId} = req.body;
         matchService.fetchUserPhotos(userId)
         .then(res =>{
             console.log(res);
@@ -30,7 +27,40 @@ export class MatchController extends BaseController {
     }catch(err){
         return this.fail(res, err.toString());
     }
+}
+
+  public fetchUsersPhotos(req: express.Request, res: express.Response){
+    try{
+      //todo 
+    }catch(err){
+        return this.fail(res, err.toString());
+    }
   }
+
+  public filterUsers(req: express.Request, res: express.Response){
+    try{
+      if(Object.keys(req.body).length === 0)
+        return this.notFound(res, 'empty request object, filter criterias not found')
+      const condition = matchService.getCriterias(req.body);    
+    }catch(err){
+      return this.fail(res, err.toString());
+    }
+  }
+//   //router.post('/authenticate', UserControler);
+// router.post('/filterUsers', async(req, res)=>{
+//   let conditions = getCriterias(req.body)
+//   console.log('inside filterUsers')
+//   let users = await filterUsers(conditions)
+//   //let users = await fetchUserFromId(22)
+//   //setTimeout(foo().then((res)=>res.send('ok')), 300)
+//   res.send(users)
+//   //filterUsers(conditions).then((result)=>{
+//   //    console.log(result[0])
+//   //    res.send(result)
+//   //}).catch((error)=>{
+//   //    console.log('error in post filterUsers '+error)
+//   //})
+// })
 
 
 
