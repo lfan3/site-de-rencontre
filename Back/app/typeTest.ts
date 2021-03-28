@@ -40,7 +40,17 @@ interface LabeledValue {
 function printLabel(labeledObj: LabeledValue) {
   console.log(labeledObj);
 }
-  
+
+function outputLabel():LabeledValue{
+    return { size: 10, label: "Size 10 Object" };
+}
 let myObj = { size: 10, label: "Size 10 Object" };
-printLabel(myObj);
+//printLabel(myObj);
+console.log('size' in outputLabel() );
+
+
+
+
+
+
 

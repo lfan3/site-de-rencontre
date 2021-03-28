@@ -11,7 +11,7 @@ MatchRouter.post('/', (req, res)=>{
 //rout complete /match/filterUsers
 
 MatchRouter.post('/filterUsers',(req, res)=>{
-    matchController.filterUsers(req);
+    matchController.filterUsers(req, res);
 })
 
 

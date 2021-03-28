@@ -42,6 +42,8 @@ export class MatchController extends BaseController {
       if(Object.keys(req.body).length === 0)
         return this.notFound(res, 'empty request object, filter criterias not found')
       const condition = matchService.getCriterias(req.body);    
+      //...todo...
+      console.log('sex' in condition);
     }catch(err){
       return this.fail(res, err.toString());
     }
