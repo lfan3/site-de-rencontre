@@ -6,7 +6,7 @@ interface Point{
 export class CalculeSphereDistance{
     private _point1 : Point;
     private _point2 : Point;
-    private readonly _radius = 6372.8;
+    private readonly _radius = 6372;
 
     constructor(p1:Point, p2:Point){
         this._point1 = p1;
@@ -31,8 +31,9 @@ export class CalculeSphereDistance{
         return c * this._radius;
     }
 }
-const p1 = { x: 3.11871, y: 48.474315 };
-const p2 = { x: 2.513212, y: 48.911669 };
-const k = new CalculeSphereDistance(p1, p2);
-const distance = k.toDistance();
-console.log(distance);
+//test
+// const p1 = { x: 3.11871, y: 48.474315 };
+// const p2 = { x: 2.513212, y: 48.911669 };
+// const k = new CalculeSphereDistance(p1, p2);
+// const distance = k.toDistance();
+// console.log(distance);

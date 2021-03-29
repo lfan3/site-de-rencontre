@@ -1,37 +1,56 @@
 interface IUser{
-    name:String;
-    sex:String;
-    sex_orient:string;
+    name:string;
+    sex:string;
+    orient:string;
     //! potential error to fix with new Date()
     birthday: Date;
-    city:String;
-    login:String;
-    email:String;
-}
+    city:string;
+    login:string;
+    email:string;
+    distance:number;
 
+    profilePhoto:string;
+    ages:Array<number>;
+    //?do we need photos array and others, to add later
+}
 
 export class UserModel{
     
-    private name:String;
-    private sex:String;
-    private sex_orient:string;
-    private birthday: Date;
-    private city:String;
-    private login:String;
-    private email:String;
+    private _props : IUser;
 
-    constructor (user:IUser) {
-        this.name = user.name
-        this.sex= user.sex
-        this.sex_orient= user.sex_orient
-        this.birthday=  user.birthday
-        this.city= user.city
-        this.login= user.login
-        this.email= user.email
+    constructor(props: IUser){
+        this._props = props;
     }
-
-    public someFunc(){
-        console.log(this.name);
+    
+    get name ():string{
+        return this._props.name
+    }
+    get sex ():string{
+        return this._props.sex
+    }
+    get orient ():string{
+        return this._props.orient
+    }
+    get birthday ():Date{
+        return this._props.birthday
+    }
+    get city ():string{
+        return this._props.city
+    }
+    get login ():string{
+        return this._props.login
+    }
+    get email ():string{
+        return this._props.email
+    }
+    get ages ():Array<number>{
+        return this._props.ages
+    }
+    get profilePhoto ():string{
+        return this._props.profilePhoto
+    }
+    get distance ():number{
+        return this._props.distance
     }
 }
 

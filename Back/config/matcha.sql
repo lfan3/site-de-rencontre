@@ -9433,7 +9433,7 @@ CREATE TABLE `users` (
   `name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
   `birthday` date NOT NULL,
   `sex` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `sex_orient` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
+  `orient` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
   `geo_loc` geometry NOT NULL,
   `city` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `login` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
@@ -9448,7 +9448,7 @@ CREATE TABLE `users` (
 -- Déchargement des données de la table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `birthday`, `sex`, `sex_orient`, `geo_loc`, `city`, `login`, `email`, `password`, `tocken`, `is_verified`, `role`) VALUES
+INSERT INTO `users` (`id`, `name`, `birthday`, `sex`, `orient`, `geo_loc`, `city`, `login`, `email`, `password`, `tocken`, `is_verified`, `role`) VALUES
 (1, 'Gabriella', '1993-04-11', 'man', 'gay', 0xe6100000010100000050aa7d3a1ef3084049809a5ab63c4840, 'Donnemarie-Dontilly', 'Freeman.Kassulke22', 'Elza_Ullrich93@gmail.com', '$2b$10$F727ML1ie/3ukmJ.rTxXzuratSnzMiOfzbe9wFfeqVQpBV5ccdJki', '45d3c14b-12f0-4383-ae13-5fef8554938b', 1, 'ROLE_USER'),
 (2, 'Javonte', '1986-07-04', 'man', 'straight', 0xe6100000010100000069519fe40e1b044076e3dd91b1744840, 'Livry-Gargan', 'Adan20', 'Gay_Gulgowski@hotmail.com', '$2b$10$appxF4W8f1DbbyIQSwsTn.RCnQz70yCp0AywVyJvPxKyYF53Uq5x2', '27fcf5e0-21af-4760-975c-639b7f88491b', 1, 'ROLE_USER'),
 (3, 'Myah', '1971-05-23', 'man', 'straight', 0xe610000001010000001536035c90cd0240f8e3f6cb270d4840, 'Boynes', 'Nikita_Barrows75', 'Alvis61@gmail.com', '$2b$10$29bRpS6UapB9hPCRPAIocOYODt.SJ.7YnUn4GCHnhRhaZOvJzIxa6', 'c14bd52e-8ffa-4c42-89e4-55bfaf0c7c9a', 1, 'ROLE_USER'),
@@ -9627,7 +9627,7 @@ INSERT INTO `users` (`id`, `name`, `birthday`, `sex`, `sex_orient`, `geo_loc`, `
 (176, 'Polly', '1975-10-12', 'man', 'straight', 0xe610000001010000007fdc7ef9640507406ceba7ffac294840, 'Dormelles', 'Uriel.Littel4', 'Marshall_Jaskolski71@gmail.com', '$2b$10$pmiE5tM5LpeVX6/2n10w4.OZO.UfLnwug852xXHdBqP0oTl6pFMyC', '9341e866-4eeb-476a-8169-f671244b4388', 1, 'ROLE_USER'),
 (177, 'Kaitlin', '1987-02-21', 'man', 'bi', 0xe6100000010100000074f85a86ee48b7bfa71e0eb7e88a4840, 'Mézidon Vallée d\'Auge', 'Eden_Welch75', 'Jameson_Ortiz@yahoo.com', '$2b$10$7wQQ8E5hKWQkI17XPEmM1OqP3Qe4QdWg0t3ij7RmqHJZq75SGdhdK', '0b105e9c-3eaf-4edf-a34f-43a87b91358a', 1, 'ROLE_USER'),
 (178, 'Robin', '1977-10-31', 'man', 'straight', 0xe61000000101000000543882548a9df13ff5824f73f2da4740, 'Crucheray', 'Bill_Treutel10', 'Zoie_Gulgowski54@yahoo.com', '$2b$10$PgzAWCHl.ujX44J4igkpQu55LWKH0cTC5fSUfyFZ4jimbZPHzPEOq', '4da8b3f3-d4b4-49d7-88b9-014c3f1aa31b', 1, 'ROLE_USER');
-INSERT INTO `users` (`id`, `name`, `birthday`, `sex`, `sex_orient`, `geo_loc`, `city`, `login`, `email`, `password`, `tocken`, `is_verified`, `role`) VALUES
+INSERT INTO `users` (`id`, `name`, `birthday`, `sex`, `orient`, `geo_loc`, `city`, `login`, `email`, `password`, `tocken`, `is_verified`, `role`) VALUES
 (179, 'Dina', '1976-05-16', 'man', 'straight', 0xe61000000101000000b136c64e7869094066d993c0e63c4840, 'Sigy', 'Leslie98', 'Isadore.Sipes@gmail.com', '$2b$10$k0lEssu.61jGQh2zzsHUZeQvcYJO2nhMrRMhU.942/DVkR5z4a/7m', 'fd47b2ac-1a81-4712-a519-31abb8cc67e4', 1, 'ROLE_USER'),
 (180, 'Chelsie', '1983-07-12', 'man', 'straight', 0xe61000000101000000965e9b8d95180240ad342905dd7a4740, 'Lunery', 'Dorian7', 'Cora65@yahoo.com', '$2b$10$8mSfBJ6ekwX02UH2uPn1DuQv3hAX1FaN98mNBUZJUvAE7jbINubEK', '2e486de8-4c10-42a5-979e-b56ea606a8db', 1, 'ROLE_USER'),
 (181, 'Eudora', '1973-05-14', 'man', 'gay', 0xe610000001010000007c0bebc6bb63fb3f124e0b5ef4394840, 'Béville-le-Comte', 'Hope80', 'Prudence3@hotmail.com', '$2b$10$oyQb4fbMXSRfhSQrfWlTJ.wl9q5EOngsjxviCqM8f1.VdO8jW5ueO', 'e701dd25-cc8a-440f-8e3a-0abb4387ba0e', 1, 'ROLE_USER'),
@@ -9805,7 +9805,7 @@ INSERT INTO `users` (`id`, `name`, `birthday`, `sex`, `sex_orient`, `geo_loc`, `
 (353, 'Michelle', '1975-02-20', 'woman', 'bi', 0xe6100000010100000033198ee7335810407c5171d2ea564840, 'Semoine', 'Zane.Huel43', 'Luciano.Kiehn@yahoo.com', '$2b$10$mWGZm8lazzhXqMIFI67rdOg1SOu/65euMuzXCwO0TALiEq1LclazK', '710213bd-71f3-4ab9-a63f-e7c95b75985c', 1, 'ROLE_USER'),
 (354, 'Jovan', '1999-08-14', 'woman', 'straight', 0xe610000001010000008956934cf353f93fd887500020254840, 'Les Villages Vovéens', 'Ethel_Kohler', 'Nina_Schmitt81@gmail.com', '$2b$10$r3PE9EoojelOdqkhsm8OEuE3//2aKODydqU.jFQloI685CMGCO6.q', 'd4c205a1-9302-4c1d-9f47-53003c9c0e53', 1, 'ROLE_USER'),
 (355, 'Andy', '1993-05-21', 'woman', 'straight', 0xe610000001010000006aa4a5f27684e33f0a14b18861394840, 'Mauves-sur-Huisne', 'Joannie7', 'Hailee98@gmail.com', '$2b$10$.HN8XmtVzEB2pgJWLxtGCOy7APv.cGhYQ6p86bx2KAZH5TULS8saK', '8ed30155-6d64-44e2-b16b-0208c7a36ea1', 1, 'ROLE_USER');
-INSERT INTO `users` (`id`, `name`, `birthday`, `sex`, `sex_orient`, `geo_loc`, `city`, `login`, `email`, `password`, `tocken`, `is_verified`, `role`) VALUES
+INSERT INTO `users` (`id`, `name`, `birthday`, `sex`, `orient`, `geo_loc`, `city`, `login`, `email`, `password`, `tocken`, `is_verified`, `role`) VALUES
 (356, 'Lilla', '1995-03-10', 'woman', 'straight', 0xe61000000101000000953ebece9748f73fe844cc3681384a40, 'East Suffolk', 'Louie38', 'Deron_Ondricka@yahoo.com', '$2b$10$hiXIm5euIIJkPDtWKTJv5.QG/1J2L1aMUI95Iviqtw45y0bCKniEC', '1960111b-47f2-4af0-9853-c625bde7063f', 1, 'ROLE_USER'),
 (357, 'Eloise', '1970-10-29', 'woman', 'straight', 0xe610000001010000006c223317b83ccabf986c3cd8622d4740, 'Romans', 'Christine_Hettinger', 'Franco42@gmail.com', '$2b$10$RrLw7QrR8gttG9ZsI3NS6u822tSD6g05OXHZuQAHttg28F8FB2IJC', '1ce8621d-3de1-4751-825b-24ae44656f51', 1, 'ROLE_USER'),
 (358, 'Evert', '1993-09-28', 'woman', 'straight', 0xe610000001010000003332c85d84a90440e4f560527c6e4840, 'Gournay-sur-Marne', 'Maribel_Hudson', 'Dariana_Kuhn@hotmail.com', '$2b$10$Zu2.iE24bw0vCn.joo9rg.qDolTBYWDSUI7h4lxqxCjSExYZocrny', 'aca126f2-c399-4bcb-a63f-21596a27abbb', 1, 'ROLE_USER'),
