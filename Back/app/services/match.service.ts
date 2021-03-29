@@ -1,7 +1,7 @@
 const {pool} = require('../../config/pool');
 import {BaseService} from './base.service'
 import {PhotoModel} from '../models/photo.model';
-import {PaireDistance} from './paireDistance';
+//import {PaireDistance} from './paireDistance';
 
 interface IFilterPoints{
     userId : number;
@@ -9,6 +9,37 @@ interface IFilterPoints{
     orient : string;
     ages : Array<number>;
     distance : number 
+}
+//?distance?
+interface IUserFilterResult{
+    userId : number;
+    name : string;
+    city : string;
+    sex : string;
+    sex_orient : string;
+    ages : Array<number>;
+}
+
+interface IPairDistance{
+    userId : number;
+    otherId : number;
+    distance : number | string;
+}
+
+class PaireDistance{
+    private _props : IPairDistance;
+
+    constructor(props : IPairDistance){
+        this._props = props;
+    }
+
+    get userId (): number {
+        return this._props.userId;
+    }
+
+    get otherId (): number {
+        return this._props.otherId;
+    }
 }
 
 
@@ -55,8 +86,7 @@ export class MatchService extends BaseService{
         //expresso: even though, the userId type is string, but it seems that js converted it to int during runtime, as there is no error as I defined the IFilterPoints as output
         return {userId, sex, orient, ages, distance}
     }
-    //todo try to filter one by one and then get intersection
-    //* sex orient age
+  
     // public async filterUsers(conditions : IFilterPoints){
     //     try{
     //         let matches = await this.findMatchedUsers(conditions)
@@ -119,54 +149,57 @@ export class MatchService extends BaseService{
     //     }
     // }
     // //filter users
+ 
+    public async sexOrienAgeFilter(condition : IFilterPoints): Promise<IUserFilterResult>{
+        const userId = condition.userId
+        const sex = condition.sex
+        const orient = condition.orient
+        const min_age = condition.ages[0]
+        const max_age = condition.ages[1]
+        condition.userId, condition.sex, condition.orient, condition.ages
+        if(sex !== 'all'){
+            let query = `SELECT id, name, city, sex, sex_orient, age FROM(
+                SELECT id, name, city,sex, sex_orient, FLOOR(DATEDIFF(CURRENT_DATE, (SELECT birthday))/365) AS age
+                FROM users) AS detrive_tab  WHERE id != '${userId}' && sex = '${sex}' && sex_orient = '${orient}'
+                && age >= ${min_age} && age <= ${max_age}`
+            let res = await pool.query(query)
+            return res
+        }else{
+            let query = `SELECT id, name, city, sex, sex_orient, age FROM (
+                SELECT id, name, city, sex, sex_orient, FLOOR(DATEDIFF(CURRENT_DATE, (SELECT birthday))/365) AS age
+                FROM users) AS detrive_tab WHERE sex_orient = '${orient}'
+                && age >= ${min_age} && age <= ${max_age}`
+            let res = await pool.query(query)
+            return res
+        }
+    }
+    public async distanceCalculator(userId : number, otherId : number, distance:number): Promise< PaireDistance>{
 
-    // private async sexOrienAgeFilter(userId : number,sex : string, orient :string, ages:Array<number>){
-    //     try{
-    //         let min_age = ages[0]
-    //         let max_age = ages[1]
-        
-    //         if(sex !== 'all'){
-    //             let query = `SELECT id, name, city, sex, sex_orient, age FROM(
-    //                 SELECT id, name, city,sex, sex_orient, FLOOR(DATEDIFF(CURRENT_DATE, (SELECT birthday))/365) AS age
-    //                 FROM users) AS detrive_tab  WHERE id != '${userId}' && sex = '${sex}' && sex_orient = '${orient}'
-    //                 && age >= ${min_age} && age <= ${max_age}`
-    //             let res = await pool.query(query)
-    //             return res
-    //         }else{
-    //             let query = `SELECT id, name, city, sex, sex_orient, age FROM (
-    //                 SELECT id, name, city, sex, sex_orient, FLOOR(DATEDIFF(CURRENT_DATE, (SELECT birthday))/365) AS age
-    //                 FROM users) AS detrive_tab WHERE sex_orient = '${orient}'
-    //                 && age >= ${min_age} && age <= ${max_age}`
-    //             let res = await pool.query(query)
-    //             return res
-    //         }
+        let query = `SELECT ST_Distance_Sphere(
+                        (SELECT geo_loc FROM users WHERE users.id = ${userId}),
+                        (SELECT geo_loc FROM users WHERE users.id = ${otherId})
+                    ) AS distance`
+        let res = await pool.query(query)
+        //*MAX distance = 500
+        if(distance === 500){
+            //todo: in new context, it is better to use a number, like negative number instead of string
+            //! potential problem with front, change over 500km to 500
+            return new PaireDistance({userId, otherId, distance})
+        }
+        //?what is the scale here, m or km??
+        distance = Math.round(res[0].distance)
+        return new PaireDistance({userId, otherId, distance})
+    }
 
-    //     }catch(e){
-    //         return('Error in sexOrienAgeFilter '+ e)
-    //     }
-    // }
-
-    // private async distanceCalculator(userId : number, otherId : number, distance:number): Promise< PaireDistance | void>{
-    //     try{
-    //         let query = `SELECT ST_Distance_Sphere(
-    //                         (SELECT geo_loc FROM users WHERE users.id = ${userId}),
-    //                         (SELECT geo_loc FROM users WHERE users.id = ${otherId})
-    //                     ) AS distance`
-    //         let res = await pool.query(query)
-    //   // !!!!!! need to change to 1000
-    //         if (res[0].distance < (distance * 1000) && distance !== 500){
-    //             const distance = Math.round(res[0].distance)
-    //             return new PaireDistance({userId, otherId, distance})
-    //         }
-    //         else if(distance === 500){
-    //             //todo: in new context, it is better to use a number, like negative number instead of string
-    //             const distance = 'over 500km'
-    //             return new PaireDistance({userId, otherId, distance})
-    //         }
-    //     }catch(e){
-    //         return this.fail('Error in distanceCalculator ' +e );
-    //     }
-    // }
+    public async test(){
+        try{
+            let query = `select hello('sweet home')`;
+            let res = await pool.query(query);
+            return res;
+        }catch(e){
+            return e;
+        }
+    }
 
 
 }

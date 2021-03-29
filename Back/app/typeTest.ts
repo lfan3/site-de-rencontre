@@ -46,9 +46,37 @@ function outputLabel():LabeledValue{
 }
 let myObj = { size: 10, label: "Size 10 Object" };
 //printLabel(myObj);
-console.log('size' in outputLabel() );
+//console.log('size' in outputLabel() );
 
+function topprincipal(){
+    try{
+        principal();
+    }catch(e){
+        console.log(e);
+    }
+}
 
+function principal()
+{
+    try{
+        part();
+        throw Error('in principal');
+    }catch(e){
+        console.log(e);
+    }
+}
+
+function part()
+{
+    try{
+        throw Error('in part');
+    }catch(e){
+        console.log(e);
+    }
+   
+}
+
+topprincipal();
 
 
 
