@@ -175,6 +175,7 @@ export class MatchService extends BaseService{
     }
     public async distanceCalculator(userId : number, otherId : number, distance:number): Promise< PaireDistance>{
 
+        //todo: to see the mysql point, create a function to calcule the distance
         let query = `SELECT ST_Distance_Sphere(
                         (SELECT geo_loc FROM users WHERE users.id = ${userId}),
                         (SELECT geo_loc FROM users WHERE users.id = ${otherId})
@@ -188,9 +189,18 @@ export class MatchService extends BaseService{
         }
         //?what is the scale here, m or km??
         distance = Math.round(res[0].distance)
+        console.log(distance);
         return new PaireDistance({userId, otherId, distance})
     }
-
+    public async getPoint(){
+        try{
+            let query = `SELECT geo_loc FROM users WHERE users.id = 1`;
+            let res = await pool.query(query);
+            return res;
+        }catch(e){
+            return e;
+        }
+    }
     public async test(){
         try{
             let query = `select hello('sweet home')`;
