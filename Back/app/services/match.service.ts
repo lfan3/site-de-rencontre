@@ -194,7 +194,7 @@ export class MatchService extends BaseService{
     }
     public async getPoint(){
         try{
-            let query = `SELECT geo_loc FROM users WHERE users.id = 1`;
+            let query = `SELECT geo_loc FROM users WHERE users.id < 3`;
             let res = await pool.query(query);
             return res;
         }catch(e){
