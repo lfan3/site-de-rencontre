@@ -41,8 +41,7 @@ export class MatchController extends BaseController {
     try{
       if(Object.keys(req.body).length === 0)
         return this.notFound(res, 'empty request object, filter criterias not found')
-      const condition = matchService.getCriterias(req.body);  
-      console.log(condition);  
+      //const condition = matchService.getCriterias(req.body);  
       //...todo...
       //expresso the error inside the below service catched my its own catch
       // matchService.sexOrienAgeFilter(condition)
@@ -51,7 +50,10 @@ export class MatchController extends BaseController {
       // matchService.distanceCalculator(1, 3, 30)
       // .then(res => console.log(res))
       // .catch(e =>console.log(e))
-      matchService.test().then(r=>console.log(r));
+
+      matchService.getPoint()
+      .then(res => console.log(res))
+      .catch(e =>console.log(e))
     }catch(err){
       return this.fail(res, err.toString());
     }
