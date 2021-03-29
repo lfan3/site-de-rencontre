@@ -20,6 +20,7 @@ interface ISexOrienAgeFilterResult{
     sex : string;
     orient : string;
     ages : Array<number>;
+    photo_path : string;
 }
 
 interface IPairDistance{
@@ -91,7 +92,6 @@ export class MatchService extends BaseService{
         try{
             //todo:tri empty distance
             let matches = await this.findMatchedUsers(conditions)
-            //let filters = [PaireDistance]
             let filters : Array<PaireDistance> = []
             for(let pd of matches){
                 if(pd.userId !== 0)
@@ -153,7 +153,7 @@ export class MatchService extends BaseService{
         for(let i= 0; i<others.length; i++){
             promises.push(this.distanceFilter(conditions.userId, others[i].id, conditions.distance))
         }
-        //todo tri les empty pairedis??
+        //todo:get the User final class
 
         return Promise.all(promises)
     }
@@ -166,11 +166,21 @@ export class MatchService extends BaseService{
         const min_age = condition.ages[0]
         const max_age = condition.ages[1]
 
+        //let query = `SELECT users.id, users.name, users.city, users.sex, users.orient, users.birthday, photos.photo_path \
+        //                     FROM users \
+        //                     LEFT JOIN photos \
+        //                     ON users.id = photos.user_id \
+        //                     WHERE users.id = ${otherId} && photos.is_profile` 
         if(sex !== 'all'){
-            let query = `SELECT id, name, city, sex, orient, age FROM(
-                SELECT id, name, city,sex, orient, FLOOR(DATEDIFF(CURRENT_DATE, (SELECT birthday))/365) AS age
-                FROM users) AS detrive_tab  WHERE id != '${userId}' && sex = '${sex}' && orient = '${orient}'
-                && age >= ${min_age} && age <= ${max_age}`
+            let query = `
+                SELECT tab.id, tab.name, tab.city, tab.sex, tab.orient, tab.age, tab.photo_path 
+                FROM(
+                    SELECT photos.photo_path, users.id, users.name, users.city, users.sex, users.orient, FLOOR(DATEDIFF(CURRENT_DATE, (SELECT users.birthday))/365) AS age
+                    FROM users 
+                    LEFT JOIN photos on users.id = photos.user_id
+                    WHERE photos.is_profile = 1 && users.id != '${userId}' && users.sex = '${sex}' && users.orient = '${orient}' 
+                    ) AS tab 
+                WHERE tab.age >= ${min_age} && tab.age <= ${max_age}`
             let res = await pool.query(query)
             return res
         }else{

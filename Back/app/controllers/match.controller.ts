@@ -41,19 +41,27 @@ export class MatchController extends BaseController {
     try{
       if(Object.keys(req.body).length === 0)
         return this.notFound(res, 'empty request object, filter criterias not found')
-      //const condition = matchService.getCriterias(req.body);  
+      const condition = matchService.getCriterias(req.body);  
       //...todo...
       //expresso the error inside the below service catched my its own catch
       // matchService.sexOrienAgeFilter(condition)
       // .then(res => console.log(res))
       // .catch(e => console.log('here' +e))
-      // matchService.distanceCalculator(1, 3, 30)
+      //expresso: all the error that accumulated in the findMachedUser (distanceCalculator) will be catch here.
+      // matchService.findMatchedUsers(condition)
+      // .then(res => console.log(res))
+      // .catch(e => console.log('findmacheduser' +e))
+
+      matchService.filterUsers(condition)
+      .then(res => console.log(res))
+      .catch(e => console.log('filterUsers' +e))
+      // matchService.distanceCalculatorManuel(1, 2, 100)
       // .then(res => console.log(res))
       // .catch(e =>console.log(e))
 
-      matchService.getPoint()
-      .then(res => console.log(res))
-      .catch(e =>console.log(e))
+      // matchService.getPoint()
+      // .then(res => console.log(res))
+      // .catch(e =>console.log(e))
     }catch(err){
       return this.fail(res, err.toString());
     }

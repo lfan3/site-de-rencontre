@@ -36,7 +36,20 @@ interface LabeledValue {
     size : number;
     label: string;
 }
-  
+interface IA{
+    error : string;
+}
+
+interface IEnsemble{
+    size : number;
+    label: string;
+    error : string;
+}
+
+function newType(): LabeledValue & IA {
+    return {size:1}
+}
+
 function printLabel(labeledObj: LabeledValue) {
   console.log(labeledObj);
 }
@@ -76,7 +89,11 @@ function part()
    
 }
 
-topprincipal();
+//topprincipal();
+
+
+
+
 
 
 
