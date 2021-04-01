@@ -24,7 +24,8 @@ export abstract class BaseService{
        return model;
     }
 
-    public fail (error: string ){
+    public fail (error: string ) : Error{
         throw new Error(error);
     }
+
 }

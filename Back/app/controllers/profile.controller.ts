@@ -1,7 +1,7 @@
 import * as express from 'express'
 import { BaseController } from './base.controller';
 
-export class UserController extends BaseController {
+export class ProfileController extends BaseController {
 
   protected async executeImpl (req: express.Request, res: express.Response): Promise<void | any> {
     try {
@@ -12,6 +12,14 @@ export class UserController extends BaseController {
  
     } catch (err) {
       return this.fail(res, err.toString())
+    }
+  }
+
+  public getUserById(req: express.Request, res: express.Response):Promise<void | Error> {
+    try{
+      
+    }catch(e){
+
     }
   }
 }

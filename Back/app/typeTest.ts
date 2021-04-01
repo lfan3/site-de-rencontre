@@ -1,3 +1,5 @@
+import { isSwitchStatement, Type } from "typescript";
+
 class Circle {
     static pi: number = 3.14;
         //?why static for jsonResponse
@@ -45,10 +47,18 @@ interface IEnsemble{
     label: string;
     error : string;
 }
-
+//& and | or
+//expresso LabeledValue & IA = IEnsemble
 function newType(): LabeledValue & IA {
-    return {size:1}
+    return { size: 10, label: "Size 10 Object", error : 'abc' };
 }
+
+function typeCom(input : IEnsemble){
+    return console.log(input);
+}
+
+
+//typeCom(newType());
 
 function printLabel(labeledObj: LabeledValue) {
   console.log(labeledObj);
@@ -58,6 +68,10 @@ function outputLabel():LabeledValue{
     return { size: 10, label: "Size 10 Object" };
 }
 let myObj = { size: 10, label: "Size 10 Object" };
+let secObj = { size: 20};
+
+
+
 //printLabel(myObj);
 //console.log('size' in outputLabel() );
 
@@ -90,7 +104,52 @@ function part()
 }
 
 //topprincipal();
+const e = new Error('some');
+//console.log(e instanceof Error);
 
+//type Guard
+
+interface A{
+    member:string;
+}
+
+function instanceOfA(object: any): object is A {
+    return 'member' in object;
+}
+
+function instanceOfB(object: any, prop:string): object is Object {
+    return prop in object;
+}
+
+function notInstanceOfError(object: any): object is Object {
+    return  'id' in object || 'userId' in object;
+}
+
+export interface IFilterUsersRaw{
+    userId : number;
+    sex : string;
+    orient : string;
+    ages : Array<number>;
+    distance : number 
+}
+
+export interface ISexOrienAgeFilterResult{
+    id : number;
+    name : string;
+    city : string;
+    sex : string;
+    orient : string;
+    age : number;
+    photo_path : string;
+    login:string;
+    email:string;
+}
+var a:any={member:"foobar"};
+var b = {userI: 23};
+if (instanceOfA(a)) {
+    console.log(a.member);
+}
+console.log(notInstanceOfError(b));
 
 
 

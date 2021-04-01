@@ -1,11 +1,13 @@
 import express from 'express'
 import {matchController} from '../controllers/index.controllers'
+import { matchService } from '../services/index.services';
 
 const MatchRouter = express.Router();
 //rout complete /match 
-MatchRouter.post('/', (req, res)=>{
-    console.log(req.body.userId);
-    matchController.fetchUsersPhotos(req, res);
+
+
+MatchRouter.get('/', (req, res)=>{
+    matchController.fetchAllUsersPhotos(req, res);
 });
 
 //rout complete /match/filterUsers

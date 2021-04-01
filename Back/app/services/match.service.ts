@@ -1,49 +1,8 @@
-const {pool} = require('../../config/pool');
+const {pool} = require('../../config/pool')
 import {BaseService} from './base.service'
-import {PhotoModel} from '../models/photo.model';
-import {CalculeSphereDistance} from './utility.service';
-import {UserModel} from '../models/user.model'
-//import {PaireDistance} from './paireDistance';
-
-interface IFilterUsersRaw{
-    userId : number;
-    sex : string;
-    orient : string;
-    ages : Array<number>;
-    distance : number 
-}
-//?distance?
-interface ISexOrienAgeFilterResult{
-    id : number;
-    name : string;
-    city : string;
-    sex : string;
-    orient : string;
-    ages : Array<number>;
-    photo_path : string;
-}
-
-interface IPairDistance{
-    userId : number;
-    otherId : number;
-    distance : number | string;
-}
-//??do i need to create this object
-class PaireDistance{
-    private _props : IPairDistance;
-
-    constructor(props : IPairDistance){
-        this._props = props;
-    }
-
-    get userId (): number {
-        return this._props.userId;
-    }
-
-    get otherId (): number {
-        return this._props.otherId;
-    }
-}
+import {PhotoModel} from '../models/photo.model'
+import {CalculeSphereDistance} from './utility.service'
+import {IFilterUsersRaw, ISexOrienAgeFilterResult, IPaireDistance, IUser, IPhoto} from './interfaces.service'
 
 
 export class MatchService extends BaseService{
@@ -60,13 +19,12 @@ export class MatchService extends BaseService{
         }
     }
 
-    public async fetchAllPhotos(){
+    public async fetchAllUsersPhotos(){
         try{
             let query = 'SELECT photo_path from photos'
             let res = await pool.query(query)
             let photo_path = []
-            photo_path = res.map((photo:any)=> photo.photo_path)
-            //console.log(photo_path[0])
+            photo_path = res.map((photo:IPhoto)=> photo.photo_path)
             return(photo_path)
         }catch(e){
             return('Error in FetchAllPphotos ' + e)
@@ -88,177 +46,127 @@ export class MatchService extends BaseService{
         return {userId, sex, orient, ages, distance}
     }
   
-    public async filterUsers(conditions : IFilterUsersRaw){
-        try{
-            //todo:tri empty distance
-            let matches = await this.findMatchedUsers(conditions)
-            let filters : Array<PaireDistance> = []
-            for(let pd of matches){
-                if(pd.userId !== 0)
-                    filters.push(pd)
-            }
-            // for(let i=0; i<matches.length; i++){
-            //     let info = await this.fetchFilter(matches[i].otherId)
-            //     filters[i] = Object.assign(matches[i], info)
-            // }
-            //return filters
-            return filters
-        }catch(e){
-            return('Error in filterUsers' + e)
-        }
-    }
 
-    // //get all information except distance from the mached persons
-    // private async fetchFilter(otherId : number){
-    //     try{
-    //         let query = `SELECT users.id, users.name, users.city, users.sex, users.orient, users.birthday, photos.photo_path \
-    //                     FROM users \
-    //                     LEFT JOIN photos \
-    //                     ON users.id = photos.user_id \
-    //                     WHERE users.id = ${otherId} && photos.is_profile` 
-    //         let res = await pool.query(query)
-    //         if(res[0] !== undefined){
-    //             let year = res[0].birthday
-    //             //birthtime and now are UTC time, wee need to convert the UTC time with Date instance inorder to user getUTCFullYear
-    //             let birthtime = year.getTime()
-    //             let now = Date.now()
-    //             let diff = new Date(now - birthtime)
-    //             let age = diff.getUTCFullYear() - 1970
-    //             let info = {
-    //                 id : res[0].id,
-    //                 name : res[0].name,
-    //                 city : res[0].city,
-    //                 sex : res[0].sex,
-    //                 orient : res[0].orient,
-    //                 age,
-    //                 photo_path : res[0].photo_path
-    //             }
-    //             return info
-    //         }
-    //     }catch(e){
-    //         console.log('error in fetchFilter ' + e)
-    //     }
-    // }
-
-    public async findMatchedUsers(conditions : IFilterUsersRaw) : Promise< Array<PaireDistance>>{
+    public async filterUsers(conditions : IFilterUsersRaw) : Promise< Array<IUser> | Error>{
      
-        let results = [new PaireDistance({userId:0, otherId:0, distance:0})];
         let promises = []
+        let results : Array<IUser> = []
        
-        let others = await this.sexOrienAgeFilter(conditions);
-        //if empty
-        if(others.length === 0){
-            return results;
+        try{
+            let others = await this.sexOrienAgeFilter(conditions);
+   
+            if(Array.isArray(others)){
+                if(others.length === 0){
+                    return results;
+                }
+                for(let i= 0; i<others.length; i++){
+                    promises.push(this.distanceFilter(conditions.userId, others[i].id, conditions.distance))
+                }
+                let matches = await Promise.all(promises);
+                //if no matches the distance filter after the sex filter
+                if(Array.isArray(matches)){
+                    if(matches.length === 0){
+                        return results
+                    }
+                    for(let matche of matches){
+                        if('otherId' in matche){
+                            const id = matche.otherId;
+                            if( id!== 0){
+                                const mf = others.filter(other => other.id === id)[0]
+                                const user = Object.assign(mf, {distance : matche.distance})
+                                results.push(user);
+                            }
+                        }
+                    }
+                }
+            }
+            return results
+        }catch(e){
+            return this.fail('Error in filterUsers Service '+ e);
         }
-        for(let i= 0; i<others.length; i++){
-            promises.push(this.distanceFilter(conditions.userId, others[i].id, conditions.distance))
-        }
-        //todo:get the User final class
-
-        return Promise.all(promises)
+     
     }
     // //filter users
  
-    public async sexOrienAgeFilter(condition : IFilterUsersRaw): Promise<Array<ISexOrienAgeFilterResult>>{
+    private async sexOrienAgeFilter(condition : IFilterUsersRaw): Promise<Array<ISexOrienAgeFilterResult> | Error>{
         const userId = condition.userId
         const sex = condition.sex
         const orient = condition.orient
         const min_age = condition.ages[0]
         const max_age = condition.ages[1]
-
-        //let query = `SELECT users.id, users.name, users.city, users.sex, users.orient, users.birthday, photos.photo_path \
-        //                     FROM users \
-        //                     LEFT JOIN photos \
-        //                     ON users.id = photos.user_id \
-        //                     WHERE users.id = ${otherId} && photos.is_profile` 
-        if(sex !== 'all'){
-            let query = `
-                SELECT tab.id, tab.name, tab.city, tab.sex, tab.orient, tab.age, tab.photo_path 
-                FROM(
-                    SELECT photos.photo_path, users.id, users.name, users.city, users.sex, users.orient, FLOOR(DATEDIFF(CURRENT_DATE, (SELECT users.birthday))/365) AS age
-                    FROM users 
-                    LEFT JOIN photos on users.id = photos.user_id
-                    WHERE photos.is_profile = 1 && users.id != '${userId}' && users.sex = '${sex}' && users.orient = '${orient}' 
-                    ) AS tab 
-                WHERE tab.age >= ${min_age} && tab.age <= ${max_age}`
-            let res = await pool.query(query)
-            return res
-        }else{
-            let query = `SELECT id, name, city, sex, orient, age FROM (
-                SELECT id, name, city, sex, orient, FLOOR(DATEDIFF(CURRENT_DATE, (SELECT birthday))/365) AS age
-                FROM users) AS detrive_tab WHERE orient = '${orient}'
-                && age >= ${min_age} && age <= ${max_age}`
-            let res = await pool.query(query)
-            return res
-        }
-    }
-
-
-    public async distanceFilter(userId : number, otherId : number, maxDistance:number): Promise< PaireDistance>{
-
-        let query = `SELECT geo_loc FROM users WHERE users.id = ${userId} Or users.id = ${otherId}`;
-        let res = await pool.query(query);
-        //*MAX distance = 500km
-        if(maxDistance === 500){
-            //! potential problem with front, change over 500km to 500
-            return new PaireDistance({userId, otherId, distance : maxDistance})
-        }
-        if(res.length > 0){
-            const p1 = res[0].geo_loc;
-            const p2 = res[1].geo_loc;
-            const cc = new CalculeSphereDistance(p1, p2);
-            const distance = cc.toDistance();
-            if(distance < (maxDistance))
-                return new PaireDistance({userId, otherId, distance})
-            return new PaireDistance({userId:0, otherId:0, distance:0});
-        }
-        //if res has no resultm gestion
-        else{
-            return new PaireDistance({userId:0, otherId:0, distance:0});
-        }
-
-    }
-
-
-    //! this function can only be used with mysql, dans marianDB, il ny pas de fonction st_distance_sphere
-    public async distanceCalculator(userId : number, otherId : number, distance:number): Promise< PaireDistance>{
-
-        let query = `SELECT ST_Distance_Sphere(
-                        (SELECT geo_loc FROM users WHERE users.id = ${userId}),
-                        (SELECT geo_loc FROM users WHERE users.id = ${otherId})
-                    ) AS distance`
-        let res = await pool.query(query)
-        //*MAX distance = 500
-        if(distance === 500){
-            //! potential problem with front, change over 500km to 500
-            return new PaireDistance({userId, otherId, distance})
-        }
-        //?what is the scale here, m or km??
-        distance = Math.round(res[0].distance)
-        console.log(distance);
-        return new PaireDistance({userId, otherId, distance})
-    }
-
-    
-    //funciions below to delete
-    public async getPoint(){
+        
         try{
-            let query = `SELECT geo_loc FROM users WHERE users.id < 3`;
-            let res = await pool.query(query);
-            return res;
+            if(sex !== 'all'){
+                let query = `
+                    SELECT tab.id, tab.name, tab.city, tab.sex, tab.orient, tab.age, tab.photo_path, tab.login, tab.email 
+                    FROM(
+                        SELECT photos.photo_path, users.id, users.name, users.city, users.sex, users.orient, users.login, users.email, FLOOR(DATEDIFF(CURRENT_DATE, (SELECT users.birthday))/365) AS age
+                        FROM users 
+                        LEFT JOIN photos on users.id = photos.user_id
+                        WHERE photos.is_profile = 1 && users.id != '${userId}' && users.sex = '${sex}' && users.orient = '${orient}' 
+                        ) AS tab 
+                    WHERE tab.age >= ${min_age} && tab.age <= ${max_age}`
+                let res = await pool.query(query)
+                return res
+            }else{
+                let query = `SELECT id, name, city, sex, orient, age FROM (
+                    SELECT id, name, city, sex, orient, FLOOR(DATEDIFF(CURRENT_DATE, (SELECT birthday))/365) AS age
+                    FROM users) AS detrive_tab WHERE orient = '${orient}'
+                    && age >= ${min_age} && age <= ${max_age}`
+                let res = await pool.query(query)
+                return res
+            }
         }catch(e){
-            return e;
+            return this.fail('Error in sexOrientAgeFilter '+ e.toString());
         }
+  
     }
-    public async test(){
+
+
+    private async distanceFilter(userId : number, otherId : number, maxDistance:number): Promise< IPaireDistance | Error>{
+
         try{
-            let query = `select hello('sweet home')`;
+            let query = `SELECT geo_loc FROM users WHERE users.id = ${userId} Or users.id = ${otherId}`;
             let res = await pool.query(query);
-            return res;
+            //*MAX distance = 500km
+            if(maxDistance === 500){
+                //! potential problem with front, change over 500km to 500
+                return {userId, otherId, distance : maxDistance}
+            }
+            if(res.length > 0){
+                const p1 = res[0].geo_loc;
+                const p2 = res[1].geo_loc;
+                const cc = new CalculeSphereDistance(p1, p2);
+                const distance = cc.toDistance();
+                if(distance < (maxDistance))
+                    return {userId, otherId, distance}
+                return {userId:0, otherId:0, distance:0};
+            }
+            //if res has no resultm gestion
+            else{
+                return {userId:0, otherId:0, distance:0};
+            }
         }catch(e){
-            return e;
+            return this.fail('Error in distanceFilter '+e.toString());
         }
     }
 
+
+    //! This function is useless since I have changed from mysql to mariadb : this function can only be used with mysql, dans marianDB, il ny pas de fonction st_distance_sphere
+    // public async distanceCalculator(userId : number, otherId : number, distance:number): Promise< IPaireDistance>{
+
+    //     let query = `SELECT ST_Distance_Sphere(
+    //                     (SELECT geo_loc FROM users WHERE users.id = ${userId}),
+    //                     (SELECT geo_loc FROM users WHERE users.id = ${otherId})
+    //                 ) AS distance`
+    //     let res = await pool.query(query)
+    //     //*MAX distance = 500
+    //     if(distance === 500){
+    //         return {userId, otherId, distance}
+    //     }
+    //     distance = Math.round(res[0].distance)
+    //     console.log(distance);
+    //     return {userId, otherId, distance}
+    // }
 
 }

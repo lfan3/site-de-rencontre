@@ -1,19 +1,20 @@
 interface IUser{
+    id:number;
     name:string;
     sex:string;
     orient:string;
     //! potential error to fix with new Date()
-    birthday: Date;
+    //birthday: Date;
+    age:number;
     city:string;
     login:string;
     email:string;
     distance:number;
 
-    profilePhoto:string;
-    ages:Array<number>;
+    photo_path:string;
     //?do we need photos array and others, to add later
 }
-
+//do i need to creat this class?? no use at this moment
 export class UserModel{
     
     private _props : IUser;
@@ -31,9 +32,9 @@ export class UserModel{
     get orient ():string{
         return this._props.orient
     }
-    get birthday ():Date{
-        return this._props.birthday
-    }
+    // get birthday ():Date{
+    //     return this._props.birthday
+    // }
     get city ():string{
         return this._props.city
     }
@@ -43,11 +44,11 @@ export class UserModel{
     get email ():string{
         return this._props.email
     }
-    get ages ():Array<number>{
-        return this._props.ages
+    get age ():number{
+        return this._props.age
     }
-    get profilePhoto ():string{
-        return this._props.profilePhoto
+    get photo_path():string{
+        return this._props.photo_path
     }
     get distance ():number{
         return this._props.distance

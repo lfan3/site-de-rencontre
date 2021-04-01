@@ -1,12 +1,12 @@
 //test
 import express from 'express'
-import {UserRouter} from './user.router'
+import {ProfileRouter} from './profile.router'
 import {MatchRouter} from './match.router'
 
 const RootRouter =express.Router();
 /* collection of routes*/
 //RootRouter.use('/match', MatchRouter);
-RootRouter.use('/users', UserRouter);
+RootRouter.use('/profile', ProfileRouter);
 RootRouter.use('/match', MatchRouter);
 
 
