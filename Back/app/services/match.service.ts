@@ -7,18 +7,6 @@ import {IFilterUsersRaw, ISexOrienAgeFilterResult, IPaireDistance, IUser, IPhoto
 
 export class MatchService extends BaseService{
 
-    public async fetchUserPhotos(userId : number | string){
-        try{
-            let query = `SELECT photo_path, is_profile from photos WHERE user_id =${userId}`
-            let raw = await pool.query(query)
-            let res = new PhotoModel(raw[0])
-            res.display();
-            return this.success(res)
-        }catch(e){
-            return this.fail('something wrong in match service: userId=' + userId)
-        }
-    }
-
     public async fetchAllUsersPhotos(){
         try{
             let query = 'SELECT photo_path from photos'

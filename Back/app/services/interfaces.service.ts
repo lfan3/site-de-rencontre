@@ -1,3 +1,4 @@
+//interface in match.service
 export interface IFilterUsersRaw{
     userId : number;
     sex : string;
@@ -41,4 +42,10 @@ export interface IUser{
 
 export interface IPhoto{
     photo_path:string
+}
+
+//interface in profile.services
+export interface IUserPhotos{
+    profile_photo:string;
+    other_photos: Array<string>;
 }

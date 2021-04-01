@@ -17,17 +17,17 @@ export class MatchController extends BaseController {
     }
   }
 //! not useful here
-  public fetchUserPhotosByUserId(req: express.Request, res: express.Response){
-    const {userId} = req.body;
-    try{
-        matchService.fetchUserPhotos(userId)
-        .then(res =>{
-            console.log(res);
-        })
-    }catch(err){
-        return this.fail(res, err.toString());
-    }
-}
+//   public fetchUserPhotosByUserId(req: express.Request, res: express.Response){
+//     const {userId} = req.body;
+//     try{
+//         matchService.fetchUserPhotos(userId)
+//         .then(res =>{
+//             console.log(res);
+//         })
+//     }catch(err){
+//         return this.fail(res, err.toString());
+//     }
+// }
 //result are an array of photo_path (string)
   public fetchAllUsersPhotos(req: express.Request, res: express.Response){
     try{

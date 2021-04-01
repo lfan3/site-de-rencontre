@@ -28,4 +28,7 @@ export abstract class BaseService{
         throw new Error(error);
     }
 
+    public notFound(){
+        return [];
+    }
 }
