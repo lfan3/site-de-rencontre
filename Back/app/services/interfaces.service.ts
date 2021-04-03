@@ -41,11 +41,7 @@ export interface IUser{
 }
 
 export interface IPhoto{
-    photo_path:string
+    photo_path:String;
+    is_profile:Boolean;
 }
 
-//interface in profile.services
-export interface IUserPhotos{
-    profile_photo:string;
-    other_photos: Array<string>;
-}

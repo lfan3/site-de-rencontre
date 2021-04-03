@@ -1,22 +1,19 @@
 
 const {pool} = require('../../config/pool')
 import {BaseService} from './base.service'
-import {PhotoModel} from '../models/photo.model'
-
+import {IPhoto} from './interfaces.service'
 
 export class MatchService extends BaseService{
 
     //todo: creat all methods
     //change assess privat or public
-    //creat photo object where stock the profile photo and others photos
-    //all the empty case, use not found from base service
     public async getUserById(userId : number){
         try{
             let query = `SELECT * from users WHERE id =${userId}`
             let res = await pool.query(query)
-            //todo: handle empty obje
+            //todo: handle empty obje, return emty array, send to controller where detect if it is an empty array and send header status in controller
             if(!res.length)
-                this.notFound();
+                this.notFound()
             return res[0]
         }catch(e){
             return('Error in fetchUserFromId' + e)
@@ -24,30 +21,38 @@ export class MatchService extends BaseService{
     }
 
     //tag peut etre sera separe dans un autre fichier tag
-    public async getUserProfilePhoto(userId : number){
+    public async getUserProfilePhoto(userId : number):Promise<Array<IPhoto> | Error>{
         try{
-
-        }catch(e){
-
-        }
-    }
-
-    public async getUserPhotos(userId : number | string){
-        try{
-            let query = `SELECT photo_path, is_profile from photos WHERE user_id =${userId}`
+            //?1 or true
+            let query = `SELECT photo_path, is_profile from photos WHERE user_id =${userId} AND is_profile = 1`
             let raw = await pool.query(query)
-            let res = new PhotoModel(raw[0])
-            res.display();
-            return this.success(res)
+            if(!raw.length)
+                return this.notFound()
+            return this.success(raw)
         }catch(e){
             return this.fail('something wrong in match service: userId=' + userId)
         }
     }
-//? inthe user entity?
+    //all photos(profile or not)
+    public async getUserPhotos(userId : number | string): Promise<Array<IPhoto> | Error>{
+        try{
+            let query = `SELECT photo_path, is_profile from photos WHERE user_id =${userId}`
+            //impossible to be empty
+            let raw = await pool.query(query)
+            if(!raw.length)
+                return this.notFound()
+            return this.success(raw)
+        }catch(e){
+            return this.fail('something wrong in match service: userId=' + userId)
+        }
+    }
+//? put the bioCourte directly inthe user entity is a better choise?
     public async getBioFromUser(userId : number){
         try{
             let query = `SELECT descrip FROM bioCourte WHERE user_id = ${userId}`
             let res = await pool.query(query)
+            if(!res.length)
+                return this.notFound()
             return res[0]
         }catch(e){
             return('Error in fetchuserDescription '+e)
@@ -58,8 +63,8 @@ export class MatchService extends BaseService{
         try{
             let query = `SELECT * FROM mutuallike WHERE (user_a=${userA} AND user_b=${otherB}) OR (user_a=${userA} AND user_b=${otherB})`
             let res = await pool.query(query)
-            if(!res[0])
-                return false
+            if(!res.length)
+                return this.notFound()
             return {mutual : true, room : res[0].room}
         }catch(e){
             console.log('checkMutualLike error '+e)
@@ -70,6 +75,7 @@ export class MatchService extends BaseService{
 // router.post('/profile/:userId', (req, res)=>{
 //     let userB = req.params.userId
 //     let userA = req.body.userA
+//todo: this part in service and test all the services in controller
 //     let promises = [
 //         fetchUserFromId(userB),
 //         fetchUserTags(userB),
