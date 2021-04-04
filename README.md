@@ -18,7 +18,7 @@
 ## Back detail explication:
 ### data direction:
 #### the fakeDatas creatation:
-* In order to begin the project, we need at least 500+ fake profiles data, each profile has a fake photo, name, adress, login, sex, sex_orientation, age, birthday. The final data are stored in Back/data/dummy-datas. The following list are the technologies that I used to create all fake data, some source code are in fake_generator, some are are not included inside this repo:
+* In order to begin the project, we need at least 500+ fake profiles data, each profile has a fake photo, name, adress, login, sex, orientation, age, birthday. The final data are stored in Back/data/dummy-datas. The following list are the technologies that I used to create all fake data, some source code are in fake_generator, some are are not included inside this repo:
   - faker: I use faker to generate base fake information
   - bcypt: to genetate hash fake password
   - uuid: to generation ramdom tocken for the user indentification
@@ -73,6 +73,15 @@
 * to access to bitnamie mysql, dans le dir /bitnamie/mysql : bin/mysql -u root -p
 * the two bases de données ne sont pas les mêmes.
 
+### mysql command cheetsheet 
+* connect: mysql -u username -ppassword
+* mysql show databases;
+* mysql use yourDB;
+* exit / quite
+## the command below consite of once we have selected the db
+* show tables;
+* describe one_table;
+
 ## to test the project:(work not finish yet)
 * you need to have the local mysql server. 
 * under both Front/Back direction to start the npm
@@ -81,6 +90,8 @@
 * transfert les function dans router.js and api to service/new structure
   * add user model interface , import to service
   * solve the problem of filterUsers type related
+  * fetch user one critera by one and then get the intersection of them
+  * change back the publi function en private
 * restructurer les routes et controllers, api
 * refaire une jolie front
 * a voir la détaille par rapport a match priority
@@ -90,5 +101,9 @@
 * les modules commun de la part de front
 * les functions back
 * getter and setter for entity:https://khalilstemmler.com/blogs/typescript/getters-and-setters/
+* tracer l architecture avec le schema
+* 
+* reimport data sql file 
+//drop database et reinitim gitpush
 
 
