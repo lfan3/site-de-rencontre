@@ -3,8 +3,8 @@ import {profileController} from '../controllers/index.controllers'
 
 const ProfileRouter = express.Router();
 
-ProfileRouter.post('/profile/:userId', (req, res)=>{
-    profileController.getUserById(req, res);
+ProfileRouter.post('/:userId', (req, res)=>{
+    profileController.fetchUserProfile(req, res);
 })
 
 

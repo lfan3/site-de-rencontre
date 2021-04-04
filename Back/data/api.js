@@ -106,7 +106,7 @@ async function insertNewUser(userData){
         let birthMysql = date.toISOString().slice(0,10)
         let finalcity = await getFinalCity(position, city, arronds)
         //!no , in ST_GEOMFROMTEXT, remember immer " "
-        let query = `INSERT INTO users (name, birthday, sex, sex_orient, geo_loc, city, login_id)\
+        let query = `INSERT INTO users (name, birthday, sex, orient, geo_loc, city, login_id)\
                      VALUES("${name}","${birthMysql}","${gender}","${orient}", \
                             ST_GeomFromText('POINT(${position.lat} ${position.lon})',4326),\
                             "${finalcity}", "${login_id}")`
@@ -412,6 +412,7 @@ const fetchUserPhotos = async (userId)=>{
 }
 //fetchUserPhotos(285).then((res)=>console.log(res))
 //fetch oneUser and get his information, return an Object of user information
+//! in profile service, changed name to getUserById
 const fetchUserFromId = async (userId)=>{
     try{
         let query = `SELECT * from users WHERE id =${userId}`
@@ -427,6 +428,7 @@ const fetchUserFromId = async (userId)=>{
 //fetchUserFromId(285).then((res)=>console.log(res))
 
 //fetch user description, return an array, res[0] is an object
+//! in profile service, changed name to getBioFromUser
 const fetchUserDescription = async (userId)=>{
     try{
         let query = `SELECT descrip FROM profiletext WHERE user_id = ${userId}`
@@ -439,6 +441,7 @@ const fetchUserDescription = async (userId)=>{
 //fetchUserDescription(285).then((res)=>console.log(res))
 
 //fetch all photos
+//! in match.service
 const fetchAllPhotos = async ()=>{
     try{
         let query = 'SELECT photo_path from photos'
@@ -455,7 +458,7 @@ const fetchAllPhotos = async ()=>{
 //fetch all users except the person himself
 const fetchOtherPhotos = async(userId)=>{
     try{
-        let query = `SELECT users.id, users.name, users.birthday, users.city,users.sex, users.sex_orient, users.geo_loc,  photos.user_id, photos.photo_path \
+        let query = `SELECT users.id, users.name, users.birthday, users.city,users.sex, users.orient, users.geo_loc,  photos.user_id, photos.photo_path \
                     FROM users\
                     LEFT JOIN photos\
                     ON users.id = photos.user_id\
@@ -479,16 +482,16 @@ const sexOrienAgeFilter = async (userId,sex, orient, ages)=>{
         let max_age = ages[1]
      
         if(sex !== 'all'){
-            let query = `SELECT id, name, city, sex, sex_orient, age FROM(
-                SELECT id, name, city,sex, sex_orient, FLOOR(DATEDIFF(CURRENT_DATE, (SELECT birthday))/365) AS age
-                FROM users) AS detrive_tab  WHERE id != '${userId}' && sex = '${sex}' && sex_orient = '${orient}'
+            let query = `SELECT id, name, city, sex, orient, age FROM(
+                SELECT id, name, city,sex, orient, FLOOR(DATEDIFF(CURRENT_DATE, (SELECT birthday))/365) AS age
+                FROM users) AS detrive_tab  WHERE id != '${userId}' && sex = '${sex}' && orient = '${orient}'
                 && age >= ${min_age} && age <= ${max_age}`
             let res = await pool.query(query)
             return res
         }else{
-            let query = `SELECT id, name, city, sex, sex_orient, age FROM (
-                SELECT id, name, city, sex, sex_orient, FLOOR(DATEDIFF(CURRENT_DATE, (SELECT birthday))/365) AS age
-                FROM users) AS detrive_tab WHERE sex_orient = '${orient}'
+            let query = `SELECT id, name, city, sex, orient, age FROM (
+                SELECT id, name, city, sex, orient, FLOOR(DATEDIFF(CURRENT_DATE, (SELECT birthday))/365) AS age
+                FROM users) AS detrive_tab WHERE orient = '${orient}'
                 && age >= ${min_age} && age <= ${max_age}`
             let res = await pool.query(query)
             return res
@@ -547,7 +550,7 @@ const findMatchedUsers = async ({userId, sex, orient, ages, distance})=>{
 //get all information except distance from the mached persons
 const fetchFilter = async(otherId)=>{
     try{
-    let query = `SELECT users.id, users.name, users.city, users.sex, users.sex_orient, users.birthday, photos.photo_path \
+    let query = `SELECT users.id, users.name, users.city, users.sex, users.orient, users.birthday, photos.photo_path \
                 FROM users \
                 LEFT JOIN photos \
                 ON users.id = photos.user_id \
@@ -565,7 +568,7 @@ const fetchFilter = async(otherId)=>{
             name : res[0].name,
             city : res[0].city,
             sex : res[0].sex,
-            sex_orient : res[0].sex_orient,
+            orient : res[0].orient,
             age,
             photo_path : res[0].photo_path
         }

@@ -1,3 +1,22 @@
+###
+GET http://localhost:5000/match
+
+###
+POST http://localhost:5000/match/filterUsers
+Content-Type: application/json
+
+{
+    "userId" : "1",
+    "sexdata" : "man",
+    "orientdata" : "gay",
+    "fromdata" : "20",
+    "toAge" : "23",
+    "distancedata" : "100"
+}
+
+
+
+### below are test, not established route
 POST http://localhost:5000/users
 Content-Type: application/json
 
@@ -5,7 +24,7 @@ Content-Type: application/json
     "userId": "116551321"
 }
 
-###
+### 
 POST http://localhost:5000/users
 Content-Type: application/json
 
@@ -22,15 +41,5 @@ Content-Type: application/json
     "userId" : "0"
 }
 
-###
-POST http://localhost:5000/match/filterUsers
-Content-Type: application/json
 
-{
-    "userId" : "1",
-    "sexdata" : "man",
-    "orientdata" : "gay",
-    "fromdata" : "20",
-    "toAge" : "23",
-    "distancedata" : "30"
-}
+

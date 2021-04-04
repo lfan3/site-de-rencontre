@@ -17,7 +17,7 @@ const Users = "CREATE TABLE IF NOT EXISTS users (\
             name VARCHAR(50) NOT NULL,\
             birthday DATE NOT NULL,\
             sex VARCHAR(10) NOT NULL,\
-            sex_orient VARCHAR(10) NOT NULL,\
+            orient VARCHAR(10) NOT NULL,\
             geo_loc GEOMETRY NOT NULL,\
             city VARCHAR(255),\
             login VARCHAR(50) NOT NULL,\
@@ -32,7 +32,7 @@ const Users = "CREATE TABLE IF NOT EXISTS users (\
 const Preferences = "CREATE TABLE IF NOT EXISTS preferences( \
                     id INT NOT NULL AUTO_INCREMENT,\
                     sex VARCHAR(10) NOT NULL,\
-                    sex_orient VARCHAR(10) NOT NULL,\
+                    orient VARCHAR(10) NOT NULL,\
                     age INT NOT NULL,\
                     distance INT NOT NULL\
                     PRIMARY KEY (id), \

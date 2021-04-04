@@ -10,13 +10,13 @@ const bioCourte = require('../dummy_datas/dummy_texts')
 //create queries functions
 var usersQuery = ()=>{
     let len = users.length
-    let query = `INSERT INTO users (name, birthday, sex, sex_orient, geo_loc, city, login, email, password, tocken, is_verified, role) VALUES `
+    let query = `INSERT INTO users (name, birthday, sex, orient, geo_loc, city, login, email, password, tocken, is_verified, role) VALUES `
     
     for(let i=0; i<len; i++){
         if(i < len - 1){
-            query += `("${users[i].name}", "${users[i].birthday}", "${users[i].sex}", "${users[i].sex_orient}", ST_GeomFromText('POINT(${users[i].lat} ${users[i].lon})', 4326), "${users[i].city}",  "${logins[i].login}", "${logins[i].email}", "${logins[i].password}", "${logins[i].tocken}", ${logins[i].is_verified}, "ROLE_USER"),`
+            query += `("${users[i].name}", "${users[i].birthday}", "${users[i].sex}", "${users[i].orient}", ST_GeomFromText('POINT(${users[i].lat} ${users[i].lon})', 4326), "${users[i].city}",  "${logins[i].login}", "${logins[i].email}", "${logins[i].password}", "${logins[i].tocken}", ${logins[i].is_verified}, "ROLE_USER"),`
         }else{
-            query += `("${users[i].name}", "${users[i].birthday}", "${users[i].sex}", "${users[i].sex_orient}", ST_GeomFromText('POINT(${users[i].lat} ${users[i].lon})', 4326), "${users[i].city}",  "${logins[i].login}", "${logins[i].email}", "${logins[i].password}", "${logins[i].tocken}", ${logins[i].is_verified}, "ROLE_USER")`
+            query += `("${users[i].name}", "${users[i].birthday}", "${users[i].sex}", "${users[i].orient}", ST_GeomFromText('POINT(${users[i].lat} ${users[i].lon})', 4326), "${users[i].city}",  "${logins[i].login}", "${logins[i].email}", "${logins[i].password}", "${logins[i].tocken}", ${logins[i].is_verified}, "ROLE_USER")`
         }
     }
     return query

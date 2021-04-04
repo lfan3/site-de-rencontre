@@ -60,7 +60,6 @@ app.post('/signin', (req, res, next)=>{
         })(req, res, next)
 }
 */
-//todo test signin
 router.post('/signin', (req, res)=>{
     console.log('inside the signin get callback function')
     //console.log(req.body)
@@ -111,6 +110,7 @@ async function fifi(){
     let users = await foo()
     console.log(users)
 }
+//! done in match.service et match.controller
 router.post('/filterUsers', async(req, res)=>{
     let conditions = getCriterias(req.body)
     console.log('inside filterUsers')
@@ -125,7 +125,7 @@ router.post('/filterUsers', async(req, res)=>{
     //    console.log('error in post filterUsers '+error)
     //})
 })
-
+//todo
 router.post('/profile/:userId', (req, res)=>{
         let userB = req.params.userId
         let userA = req.body.userA

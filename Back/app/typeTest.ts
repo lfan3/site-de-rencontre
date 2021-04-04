@@ -113,6 +113,12 @@ interface A{
     member:string;
 }
 
+const p = {member:'abc', id: 4};
+
+function testInterface(arg : A){
+    return 'ok';
+}
+
 function instanceOfA(object: any): object is A {
     return 'member' in object;
 }
@@ -144,12 +150,21 @@ export interface ISexOrienAgeFilterResult{
     login:string;
     email:string;
 }
-var a:any={member:"foobar"};
-var b = {userI: 23};
-if (instanceOfA(a)) {
-    console.log(a.member);
+
+//function as param
+type GreetFunction = (a: Array<string>) => Array<string>;
+function greeter(fn: GreetFunction) {
+  // ...
 }
-console.log(notInstanceOfError(b));
+
+const array = [1,2,3]
+function add(a:number){
+    return a + 5;
+}
+
+const res = array.map(add)
+console.log(res)
+
 
 
 

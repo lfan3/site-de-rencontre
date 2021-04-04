@@ -9,21 +9,21 @@ const races = ["asian","black","latino","white"]
 
 function user_generator(){
     let users = []
-    let sex_orient
+    let orient
     for(let i=0; i<520; i++){
         if(i%9 ===0)
-            sex_orient = 'gay'
+            orient = 'gay'
         else if(i%8 ===0)
-            sex_orient = 'bi'
+            orient = 'bi'
         else
-            sex_orient = 'straight'
+            orient = 'straight'
         let date = faker.date.between('1970-01-01', '2003-01-01')
         let user = {
             id : i,
             name: faker.name.firstName(),
             birthday : date.toISOString().slice(0,10),
             sex : all_avatars[i].gender,
-            sex_orient,
+            orient,
             lat: address[i].lat,
             lon: address[i].lon,
             city:address[i].city,

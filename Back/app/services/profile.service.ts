@@ -1,13 +1,32 @@
 
 const {pool} = require('../../config/pool')
 import {BaseService} from './base.service'
-import {IPhoto} from './interfaces.service'
+import {IPhoto, IUser, IBioCourte, IChatRoom} from './interfaces.service'
 
-export class MatchService extends BaseService{
+export class ProfileService extends BaseService{
 
     //todo: creat all methods
     //change assess privat or public
-    public async getUserById(userId : number){
+    //add interface to tags related functions
+    
+    public async fetchUserProfile(userId : number, other : number){
+        let promises = [
+            this.getUserById(userId),
+            this.getUserTags(userId),
+            this.getUserPhotos(userId),
+            this.getBioFromUser(userId),
+            this.checkMutualLike(userId, other)
+        ]
+        return await Promise.all(promises);
+        // Promise.all(promises).then((values)=>{
+        //     res.send(values)
+        // }).catch((error)=>{
+        //     console.log('error in promiseAll' +error)
+        //     res.send({error : 'Four O Four == 404 Not Found'})
+        // })
+    }
+//! tested
+    public async getUserById(userId : number) : Promise<Array<IUser> | Error>{
         try{
             let query = `SELECT * from users WHERE id =${userId}`
             let res = await pool.query(query)
@@ -16,14 +35,13 @@ export class MatchService extends BaseService{
                 this.notFound()
             return res[0]
         }catch(e){
-            return('Error in fetchUserFromId' + e)
+            return this.fail('Error in fetchUserFromId' + e)
         }
     }
-
+//! tested
     //tag peut etre sera separe dans un autre fichier tag
     public async getUserProfilePhoto(userId : number):Promise<Array<IPhoto> | Error>{
         try{
-            //?1 or true
             let query = `SELECT photo_path, is_profile from photos WHERE user_id =${userId} AND is_profile = 1`
             let raw = await pool.query(query)
             if(!raw.length)
@@ -33,6 +51,7 @@ export class MatchService extends BaseService{
             return this.fail('something wrong in match service: userId=' + userId)
         }
     }
+//! tested
     //all photos(profile or not)
     public async getUserPhotos(userId : number | string): Promise<Array<IPhoto> | Error>{
         try{
@@ -47,7 +66,7 @@ export class MatchService extends BaseService{
         }
     }
 //? put the bioCourte directly inthe user entity is a better choise?
-    public async getBioFromUser(userId : number){
+    public async getBioFromUser(userId : number):Promise<Array<IBioCourte> | Error>{
         try{
             let query = `SELECT descrip FROM bioCourte WHERE user_id = ${userId}`
             let res = await pool.query(query)
@@ -55,11 +74,52 @@ export class MatchService extends BaseService{
                 return this.notFound()
             return res[0]
         }catch(e){
-            return('Error in fetchuserDescription '+e)
+            return this.fail('Error in fetchuserDescription '+e)
         }
     }
 
-    public async checkMutualLike(userA : number, otherB : number){
+    public async getUserTags(userId : number){
+        try{
+            let tags = []
+            let tagIds = await this.getUserTagIds(userId)
+            if(!tagIds.length)
+                return this.notFound()
+            tags = tagIds.map(await this.getUserTag);
+            // for(let i=0; i <len; i++){
+            //     tags[i] = await this.getUserTag(tagIds[i])
+            // }
+            return tags
+        }catch(e){
+            return('Error in fetchUserTagS' + e)
+        }
+    }
+
+ 
+    public async getUserTagIds(userId:number){
+        try{
+            let query = `SELECT tag_id from users_tags WHERE user_id =${userId}`
+            let res = await pool.query(query)
+            if(!res.length)
+                return this.notFound()
+            return res[0]
+        }catch(e){
+            return this.fail('Error in fetchUserTagIdS' + e)
+        }
+    }
+
+    public async getUserTag(tagId:number){
+        try{
+            let query = `SELECT tag from tags WHERE id =${tagId}`
+            let res = await pool.query(query)
+            if(!res.length)
+                return this.notFound()
+            return res[0].tag
+        }catch(e){
+            return this.fail('Error in fetchUserTagS' + e)
+        }
+    }
+
+    public async checkMutualLike(userA : number, otherB : number):Promise<IChatRoom | Error | Array<any>>{
         try{
             let query = `SELECT * FROM mutuallike WHERE (user_a=${userA} AND user_b=${otherB}) OR (user_a=${userA} AND user_b=${otherB})`
             let res = await pool.query(query)
@@ -67,7 +127,7 @@ export class MatchService extends BaseService{
                 return this.notFound()
             return {mutual : true, room : res[0].room}
         }catch(e){
-            console.log('checkMutualLike error '+e)
+            return this.fail('checkMutualLike error '+e)
         }
     }
 }
