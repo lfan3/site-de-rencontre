@@ -1,3 +1,5 @@
+import {BaseService} from './base.service'
+
 interface Point{
     x:number;
     y:number;
@@ -37,3 +39,23 @@ export class CalculeSphereDistance{
 // const k = new CalculeSphereDistance(p1, p2);
 // const distance = k.toDistance();
 // console.log(distance);
+
+export class GeoService extends BaseService{
+    public async getCities(userId : number){
+   
+    }
+}
+
+//! this part should putted in utilities and then consider to be puted in other place
+// router.get('/cities', async(req, res)=>{
+//     const promises = [getFrenchCities(), getArrondParis()]
+//     try{
+//         const [cities, arronds] = await Promise.all(promises).then()
+//         res.json({cities, arronds})
+//     }catch(e){
+//         if(e instanceof Errors.NotFound)
+//             return res.status(HttpStatus.NOT_FOUND).send({message : e.message})
+//         else
+//             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({error: e, message: e.message})
+//     }
+// })

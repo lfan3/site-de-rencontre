@@ -233,7 +233,7 @@ router.get('/tags', async(req, res)=>{
     })
 })
 
-//! this part should putted in geoservice and then consider to be puted in other place
+//! this part should putted in utilities and then consider to be puted in other place
 router.get('/cities', async(req, res)=>{
     const promises = [getFrenchCities(), getArrondParis()]
     try{
