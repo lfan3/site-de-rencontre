@@ -40,14 +40,32 @@ function tagsQuery(){
 function photosQuery(){
     let len = photos.length
     let query = 'INSERT INTO photos (photo_path, is_profile, user_id) VALUES '
-    for(let i=0; i<len; i++){
-        if(i < len -1){
-            //mistake : forget ' ' around ${}
-            query += `("${photos[i].photo_path}", ${photos[i].is_profile}, ${photos[i].user_id + 1}),`
-        }else{
-            query += `("${photos[i].photo_path}", ${photos[i].is_profile}, ${photos[i].user_id + 1})`
+
+    for(let j=0; j<3; j++){
+        if(j==0){
+            for(let i=0; i<len; i++){
+                    //mistake : forget ' ' around ${}
+                query += `("${photos[i].photo_path}", ${photos[i].is_profile}, ${photos[i].user_id + 1}),`
+            }
+        }
+        else if(j==1){
+            for(let i=0; i<len; i++){
+                    //mistake : forget ' ' around ${}
+                query += `("${photos[i].photo_path}", ${photos[i].is_profile -1}, ${photos[i].user_id + 1}),`
+            }
+        }
+        else{
+            for(let i=0; i<len; i++){
+                if(i < len -1){
+                    //mistake : forget ' ' around ${}
+                    query += `("${photos[i].photo_path}", ${photos[i].is_profile -1}, ${photos[i].user_id + 1}),`
+                }else{
+                    query += `("${photos[i].photo_path}", ${photos[i].is_profile -1}, ${photos[i].user_id + 1})`
+                }
+            } 
         }
     }
+
     return query
 }
 
@@ -160,8 +178,12 @@ async function fillAllTables(){
 //! csvToMysql.js setup arrondissemnts datas/tables
 //! vill_france_free.sql setup the all the cities data.
 
-fillAllTables();
+//fillAllTables();
 
+
+
+fill_photos_func(photosQuery());
+//console.log(photosQuery())
 //to delete
 // function loginsQuery(){
 //     let len = logins.length
