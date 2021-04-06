@@ -83,7 +83,7 @@ export class ProfileService extends BaseService{
             let tags = []
             let tagIds = await this.getUserTagIds(userId)
             if(!tagIds.length)
-                return this.notFound()
+                return this.notFound()  
             tags = tagIds.map(await this.getUserTag);
             // for(let i=0; i <len; i++){
             //     tags[i] = await this.getUserTag(tagIds[i])

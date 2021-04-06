@@ -19,6 +19,7 @@ export class ProfileController extends BaseController {
   public fetchUserProfile(req: express.Request, res: express.Response) {
     let userA = req.body.userA
     let userId = req.params.userId
+    console.log(userA)
     try{
       //todo:empty case
       profileService.getBioFromUser(parseInt(userId))
