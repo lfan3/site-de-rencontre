@@ -1,4 +1,4 @@
 Front/node_modules
 Back/node_modules
-Back/.gitignore
 Back/build
+Back/.env

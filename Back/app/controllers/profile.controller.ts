@@ -19,11 +19,12 @@ export class ProfileController extends BaseController {
   public fetchUserProfile(req: express.Request, res: express.Response) {
     let userA = req.body.userA
     let userId = req.params.userId
+    console.log(userId)
     try{
       //todo:empty case
-      profileService.getBioFromUser(parseInt(userId))
+      profileService.getUserTagIds(parseInt(userId))
       .then(result => console.log(result))
-      .catch(e => 'error in profileService')
+      .catch(e => console.log('error in profileService' + e))
     }catch(e){
       return this.fail(res, e.toString())
     }

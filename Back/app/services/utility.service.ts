@@ -42,10 +42,16 @@ export class CalculeSphereDistance{
 // const k = new CalculeSphereDistance(p1, p2);
 // const distance = k.toDistance();
 // console.log(distance);
-
+//! not tested service
 export class CityService extends BaseService{
     public async getCities(userId : number){
-        
+        const promises = [this.getFrenchCities(), this.getArrondParis()]
+        try{
+            const [cities, arronds] = await Promise.all(promises).then()
+            return [cities, arronds]
+        }catch(e){
+            this.fail('Error inside getCities of CityService')
+        }
     }
 
     public async getFrenchCities(){
@@ -64,17 +70,13 @@ export class CityService extends BaseService{
 
     public async getArrondParis(){
         try{
-            let query = 'SELECT l_ar FROM arrondissements'
+            let query = 'SELECT SimpleName FROM arrondissements'
             let arronds = await pool.query(query)
             if(!arronds.length)
-                throw new Errors.NotFound("l'arrondissements are not found")
+                return this.notFound()
             return (arronds)
         }catch(e){
-            console.log('getArrondParis Error '+e)
-            if(e instanceof Errors.NotFound)
-                throw new Errors.NotFound(e.message)
-            else
-                throw new Error(e)
+            this.fail('getArrondParis Error '+ e)
         }
     }
     

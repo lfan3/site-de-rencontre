@@ -88,11 +88,7 @@
 
 ### todo
 * transfert les function dans router.js and api to service/new structure
-  * fusionner les villes et arrondissement dans init
-  * add user model interface , import to service
-  * solve the problem of filterUsers type related
-  * fetch user one critera by one and then get the intersection of them
-  * change back the publi function en private
+  * fusionner les villes et arrondissement avec le matcha.sql, importer le matcha data sql complete dans init
 * restructurer les routes et controllers, api
 * refaire une jolie front
 * a voir la détaille par rapport a match priority
@@ -100,11 +96,10 @@
 * routes: security(inscrire, loginIn), user(public, privé), match(voir les photos, filter), notification(), chat(fixe sur footer chaque page) 
 * authentification / do security controller
 * les modules commun de la part de front
-* les functions back
 * getter and setter for entity:https://khalilstemmler.com/blogs/typescript/getters-and-setters/
 * tracer l architecture avec le schema
 * 
-* reimport data sql file 
+
 //drop database et reinitim gitpush
 
 
