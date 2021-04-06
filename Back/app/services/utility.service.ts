@@ -1,4 +1,7 @@
+const {pool} = require('../../config/pool')
 import {BaseService} from './base.service'
+
+
 
 interface Point{
     x:number;
@@ -40,10 +43,29 @@ export class CalculeSphereDistance{
 // const distance = k.toDistance();
 // console.log(distance);
 
-export class GeoService extends BaseService{
+export class CityService extends BaseService{
     public async getCities(userId : number){
-   
+        
     }
+
+    public async getFrenchCities(){
+        try{
+            let query = 'SELECT city_nom FROM franceCities \
+                            WHERE population>30000\
+                            ORDER BY city_nom'
+            let cities = await pool.query(query)
+            if(!cities.length)
+                return this.notFound()
+            return(cities)
+        }catch(e){
+            this.fail('Error from getFrenchCities' + e)
+        }
+    }
+
+    public async getArrondParis(){
+        
+    }
+    
 }
 
 //! this part should putted in utilities and then consider to be puted in other place

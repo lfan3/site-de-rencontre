@@ -55,3 +55,8 @@ export interface IChatRoom{
     room:number;
 }
 
+//utility service
+export interface ICity{
+
+}
+
