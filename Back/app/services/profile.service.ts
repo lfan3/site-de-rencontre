@@ -12,7 +12,7 @@ export class ProfileService extends BaseService{
     public async fetchUserProfile(userId : number, other : number){
         let promises = [
             this.getUserById(userId),
-            this.getUserTags(userId),
+            //this.getUserTags(userId),
             this.getUserPhotos(userId),
             this.getBioFromUser(userId),
             this.checkMutualLike(userId, other)
@@ -66,9 +66,10 @@ export class ProfileService extends BaseService{
         }
     }
 //? put the bioCourte directly inthe user entity is a better choise?
+//! tested
     public async getBioFromUser(userId : number):Promise<Array<IBioCourte> | Error>{
         try{
-            let query = `SELECT descrip FROM bioCourte WHERE user_id = ${userId}`
+            let query = `SELECT bioCourte FROM bio_courte WHERE user_id = ${userId}`
             let res = await pool.query(query)
             if(!res.length)
                 return this.notFound()
@@ -80,28 +81,34 @@ export class ProfileService extends BaseService{
 
     public async getUserTags(userId : number){
         try{
-            let tags = []
-            let tagIds = await this.getUserTagIds(userId)
-            if(!tagIds.length)
-                return this.notFound()  
-            tags = tagIds.map(await this.getUserTag);
+            let tagIds = await this.getUserTagsIds(userId)
+            if(Array.isArray(tagIds)){
+                let tags = Array<string>
+                if(!tagIds.length)
+                    return this.notFound()  
+            //tags = tagIds.map(await this.getUserTag);
             // for(let i=0; i <len; i++){
             //     tags[i] = await this.getUserTag(tagIds[i])
             // }
-            return tags
+                return tags
+            }
         }catch(e){
             return('Error in fetchUserTagS' + e)
         }
     }
 
  
-    public async getUserTagIds(userId:number){
+    public async getUserTagsIds(userId:number){
         try{
-            let query = `SELECT tag_id from users_tags WHERE user_id =${userId}`
+            let query = `SELECT tag_id from logins_tags WHERE user_id =${userId}`
             let res = await pool.query(query)
+            let result = []
             if(!res.length)
                 return this.notFound()
-            return res[0]
+            for(let i=0; i<res.length; i++){
+                result.push(res[i].tag_id);
+            }
+            return result
         }catch(e){
             return this.fail('Error in fetchUserTagIdS' + e)
         }

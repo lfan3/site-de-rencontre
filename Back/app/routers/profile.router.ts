@@ -7,6 +7,10 @@ ProfileRouter.post('/:userId', (req, res)=>{
     profileController.fetchUserProfile(req, res);
 })
 
+ProfileRouter.get('/', (req, res)=>{
+    res.send('hello')
+})
+
 
 
 export {ProfileRouter};
