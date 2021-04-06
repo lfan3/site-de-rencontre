@@ -63,7 +63,19 @@ export class CityService extends BaseService{
     }
 
     public async getArrondParis(){
-        
+        try{
+            let query = 'SELECT l_ar FROM arrondissements'
+            let arronds = await pool.query(query)
+            if(!arronds.length)
+                throw new Errors.NotFound("l'arrondissements are not found")
+            return (arronds)
+        }catch(e){
+            console.log('getArrondParis Error '+e)
+            if(e instanceof Errors.NotFound)
+                throw new Errors.NotFound(e.message)
+            else
+                throw new Error(e)
+        }
     }
     
 }
