@@ -41,5 +41,7 @@ Content-Type: application/json
     "userId" : "0"
 }
 
+###
+GET https://opendata.paris.fr/explore/dataset/arrondissements
 
 

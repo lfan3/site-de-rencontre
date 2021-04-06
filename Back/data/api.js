@@ -167,7 +167,7 @@ async function getFrenchCities(){
         }
     }
 }
-
+//! in utility.service
 async function getArrondParis(){
     try{
         let query = 'SELECT l_ar FROM arrondissements'

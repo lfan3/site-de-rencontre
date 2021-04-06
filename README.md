@@ -88,6 +88,7 @@
 
 ### todo
 * transfert les function dans router.js and api to service/new structure
+  * fusionner les villes et arrondissement dans init
   * add user model interface , import to service
   * solve the problem of filterUsers type related
   * fetch user one critera by one and then get the intersection of them

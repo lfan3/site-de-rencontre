@@ -233,6 +233,7 @@ router.get('/tags', async(req, res)=>{
     })
 })
 
+//! this part should putted in utilities and then consider to be puted in other place
 router.get('/cities', async(req, res)=>{
     const promises = [getFrenchCities(), getArrondParis()]
     try{
@@ -245,13 +246,14 @@ router.get('/cities', async(req, res)=>{
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({error: e, message: e.message})
     }
 })
+
+//! should be putted in security
 router.post('/newUser', async(req, res)=>{
     let userData = req.body
     console.log(userData)
     insertNewUser(userData)
 })
 
-//! match_question
 router.post('/match_questions', async(req, res)=>{
     let match_answers = req.body
     console.log(match_answers)
