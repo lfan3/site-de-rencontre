@@ -1,3 +1,8 @@
+const {pool} = require('../../config/pool')
+import {BaseService} from './base.service'
+
+
+
 interface Point{
     x:number;
     y:number;
@@ -37,3 +42,54 @@ export class CalculeSphereDistance{
 // const k = new CalculeSphereDistance(p1, p2);
 // const distance = k.toDistance();
 // console.log(distance);
+
+export class CityService extends BaseService{
+    public async getCities(userId : number){
+        
+    }
+
+    public async getFrenchCities(){
+        try{
+            let query = 'SELECT city_nom FROM franceCities \
+                            WHERE population>30000\
+                            ORDER BY city_nom'
+            let cities = await pool.query(query)
+            if(!cities.length)
+                return this.notFound()
+            return(cities)
+        }catch(e){
+            this.fail('Error from getFrenchCities' + e)
+        }
+    }
+
+    public async getArrondParis(){
+        try{
+            let query = 'SELECT l_ar FROM arrondissements'
+            let arronds = await pool.query(query)
+            if(!arronds.length)
+                throw new Errors.NotFound("l'arrondissements are not found")
+            return (arronds)
+        }catch(e){
+            console.log('getArrondParis Error '+e)
+            if(e instanceof Errors.NotFound)
+                throw new Errors.NotFound(e.message)
+            else
+                throw new Error(e)
+        }
+    }
+    
+}
+
+//! this part should putted in utilities and then consider to be puted in other place
+// router.get('/cities', async(req, res)=>{
+//     const promises = [getFrenchCities(), getArrondParis()]
+//     try{
+//         const [cities, arronds] = await Promise.all(promises).then()
+//         res.json({cities, arronds})
+//     }catch(e){
+//         if(e instanceof Errors.NotFound)
+//             return res.status(HttpStatus.NOT_FOUND).send({message : e.message})
+//         else
+//             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({error: e, message: e.message})
+//     }
+// })
