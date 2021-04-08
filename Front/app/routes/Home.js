@@ -1,12 +1,14 @@
 import React from 'react'
 import {HomeHeader} from '../components/HomeHeader'
-import Test from '../components/material'
+import {HomeBody} from '../components/HomeBody'
+
+
 
 export function Home(){
     return (
-        <div>
+        <div style={{marginTop:'4.5em'}}>
             <HomeHeader/>
-            <Test/>
+            <HomeBody/>
         </div>
     )
 }

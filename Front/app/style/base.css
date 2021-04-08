@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'DM Serif Display';
+    font-weight: 400;
+    src: url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap');
+
+}
+body {
+  font-family: 'DM Serif Display';
+}
