@@ -1,0 +1,211 @@
+html, body, #app{
+    height: 100%;
+    margin : 0;
+}
+.fullHeight{
+    height: 100%;
+    margin : 0;
+}
+.fullWidth{
+    width: 100%
+}
+.bg-blue{
+    background-color: #66dac7;
+}
+
+.bg-gray{
+    background-color: #2e4158;
+}
+.blue-gray{
+    color : #3c80d3;
+}
+.light-blue{
+    color: #66dac7;
+}
+.bg-light-gray{
+    background-color: #9da6b1;
+}
+.whiteLetters{
+    color: white;
+}
+
+.flex-row{
+    display: flex;
+    flex-direction: row;
+}
+.space-aroud{
+    justify-content: space-around;
+}
+.space-end{
+    justify-content: flex-end;
+}
+.signNav{
+    width: 90%;
+    position: relative;
+    margin-left:5%;
+    margin-right: 5%;
+}
+.sign-ul{
+    position: relative;
+    list-style: none;
+}
+.flex-iterms{
+    padding: 7px 15px;
+    margin-top : 30px
+}
+.signUp{
+    border-radius: 25px 0 0 25px;
+}
+.signIn{
+    border-radius: 0 25px 25px 0;
+}
+
+.form-container{
+    margin-top: 45px;
+}
+
+.no-padding{
+    padding: 0;
+}
+/*SignForms page*/
+.flex-colum{
+    display: flex;
+    flex-direction: column;
+}
+.FormeField{
+    margin: 15px 25px;
+}
+textarea:focus, input:focus{
+    outline : none;
+}
+input{
+    -webkit-appearance: none;
+    border : none;
+    background-color: transparent;
+    border-bottom: thin solid #9da6b1;
+    caret-color: white;
+}
+.submitButton{
+    display: flex;
+    justify-content: center;
+}
+.submit-button{
+    border : none;
+    background-color: #66dac7;
+    border-radius: 25px 25px;
+    padding: 5px 15px;
+    margin-top :30px;
+}
+
+/* heart section -> */
+.heartAnimation {
+    animation: heartbeat 1.5s 5;
+    position: relative;
+    top : 40%;
+    left : 40%;
+    height: 60px;
+    width: 60px;
+}
+.heart {
+    background-color: red;
+    height: 60px;
+    width: 60px;
+    transform: rotate(-45deg);
+}
+.heart:before,
+.heart:after{
+    content: "";
+    background: red;
+    border-radius: 50%;
+    height: 60px;
+    width: 60px;
+    position: absolute;
+}
+.heart::before{
+    top : -30px;
+}
+.heart::after{
+    right: -30px;
+}
+@keyframes heartbeat {
+    0% {
+      transform: scale(1);  
+    }
+    20% {
+        transform: scale(1.25);
+    } 
+    40% {
+      transform: scale(1.5);
+    }
+}
+
+/***main****/
+
+.flex-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin : 0;
+}
+ul{
+    padding:0px;
+}
+
+li{
+    padding :0px;
+    list-style-type: none;
+    text-align: center;
+}
+.main-container{
+    padding-left : 20px;
+}
+.grid-li{
+   margin: 20px;
+   border: #2e4158 solid 2px;
+}
+.image-grid{
+    height: 30vh;
+    width: 26vh;
+}
+.grid{
+    display: flex;
+    flex-wrap: wrap;
+}
+.space-aroud{
+    justify-content: space-around
+}
+  
+
+/***filterbar***/
+.label{
+    width: 300px;
+    margin :0px;
+    padding : 0px;
+    position: relative;
+}
+.options{
+    margin-left : 5px;
+}
+.ageInput{
+   outline:none; 
+   -webkit-appearance: none;
+   border : none;
+   background-color: #ffefd5;
+   width: 6vh;
+   text-align: center;
+}
+
+/******range  slider ****/
+#double2{
+    margin-top : 10px;
+}
+
+/****** CHAT STYLE *****/
+
+/*****Biography ***/
+.hidden{
+    display: none
+}
+.show{
+    display: block
+}

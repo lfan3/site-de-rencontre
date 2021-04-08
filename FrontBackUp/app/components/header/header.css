@@ -1,0 +1,15 @@
+.showDropNav{
+    display: block;
+}
+.hideDropNav{
+    display: none;
+}
+.paddingTop{
+    padding-top:20px;
+}
+.withPadding{
+    padding: 20px;
+}
+.middleRow{
+    height: 100px;
+}

@@ -158,9 +158,9 @@ const tablesObj = {
     matchQuestions
 }
 
-// const photoTest = {
-//     Photos
-// }
+//  const photoTest = {
+//      Photos
+//  }
 
 
 //!expresso: pool.query is pool.query = util.promisify(pool.query) in the pool, so we can use [then catch] promise synthax instead of a callback
