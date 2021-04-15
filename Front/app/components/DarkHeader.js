@@ -15,6 +15,17 @@ import Image from 'react-bootstrap/Image'
 const darkHeaderStyle = makeStyles({
     navBar:{
         backgroundColor: '#463757'
+    },
+    logo:{
+        height: '3em'
+    },
+    navLink : {
+        fontFamily: 'Open Sans',
+        color: 'white !important',
+        fontWeight: 'bold'
+    },
+    search : {
+        margin: '1em'
     }
 })
 
@@ -24,14 +35,15 @@ export function DarkHeader(){
     return (
         <Navbar className={classes.navBar} variant="dark">
             <Navbar.Brand href="#home">
-                <Image src='./public/images/logoDark.png' fluid/>
+                <Image className={classes.logo} src='./public/images/logo.svg' fluid/>
+          
             </Navbar.Brand>
             <Nav className="mr-auto">
-              <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="#features">Features</Nav.Link>
-              <Nav.Link href="#pricing">Pricing</Nav.Link>
+              <Nav.Link href="#home" className={classes.navLink}>Home</Nav.Link>
+              <Nav.Link href="#features" className={classes.navLink}>Features</Nav.Link>
+              <Nav.Link href="#pricing" className={classes.navLink}>Pricing</Nav.Link>
             </Nav>
-            <Form inline>
+            <Form inline className={classes.search}>
               <FormControl type="text" placeholder="Search" className="mr-sm-2" />
               <Button variant="outline-info">Search</Button>
             </Form>

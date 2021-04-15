@@ -1,0 +1,15 @@
+.profile-main{
+    padding: 2em;
+    display: flex;
+}
+.profile-people{
+    width: 80%;
+}
+
+.profile-filter{
+    width: 20%; 
+}
+.profile-page-arrow{
+    margin-top: 2em;
+    text-align: center;
+}

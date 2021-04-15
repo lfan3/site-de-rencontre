@@ -90,7 +90,12 @@
 * transfert les function dans router.js and api to service/new structure
   * fusionner les villes et arrondissement avec le matcha.sql, importer le matcha data sql complete dans init
 * restructurer les routes et controllers, api
-* refaire une jolie front
+* partie front
+  * le dark navbar doit encore modifier
+  * create the grill pour afficher les profiles
+  * pagination + store(
+    * store all the data in the global variable
+  )
 * a voir la détaille par rapport a match priority
 * create base service by inspired from basecontroller write baseService error
 * routes: security(inscrire, loginIn), user(public, privé), match(voir les photos, filter), notification(), chat(fixe sur footer chaque page) 
