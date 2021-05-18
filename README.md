@@ -1,6 +1,6 @@
 # This is a site de rencontre project.
 
-## Architecture MVC, MVCS possible 
+## Architecture MVCS
 
 ## The main parts:
 * inscription and connexion
@@ -96,6 +96,13 @@
   * pagination + store(
     * store all the data in the global variable
   )
+  * filter: 
+    • Un intervalle d’âge.
+    • Un intervalle de score de popularité.
+    • La localisation.
+    • Un ou plusieurs tags d’interêt.
+    la distance
+* creat node image resizing app
 * a voir la détaille par rapport a match priority
 * create base service by inspired from basecontroller write baseService error
 * routes: security(inscrire, loginIn), user(public, privé), match(voir les photos, filter), notification(), chat(fixe sur footer chaque page) 
@@ -104,7 +111,7 @@
 * getter and setter for entity:https://khalilstemmler.com/blogs/typescript/getters-and-setters/
 * tracer l architecture avec le schema
 * 
-
+* write my own {DropzoneDialog} 
 //drop database et reinitim gitpush
 
 
