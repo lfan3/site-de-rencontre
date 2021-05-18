@@ -48,5 +48,4 @@ exports.addNewUser = async function addNewUser(data){
     }
 }
 
-//checkExistingUser("fifidemacici@gmail.com");
 
