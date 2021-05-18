@@ -9,12 +9,12 @@ import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
-import Button from 'react-bootstrap/Button'
+import Button from '@material-ui/core/Button';
 import Image from 'react-bootstrap/Image'
 
-const darkHeaderStyle = makeStyles({
+const darkHeaderStyle = makeStyles((theme)=>({
     navBar:{
-        backgroundColor: '#463757'
+        background: 'linear-gradient(45deg, #6814b3 30%, #9d58db 90%)'
     },
     logo:{
         height: '3em'
@@ -25,9 +25,14 @@ const darkHeaderStyle = makeStyles({
         fontWeight: 'bold'
     },
     search : {
-        margin: '1em'
+        margin: '1em',
+    },
+    button:{
+        fontWeight: 'bold',
+        backgroundColor: theme.palette.primary.light,
+        color:'white'
     }
-})
+}))
 
 export function DarkHeader(){
     const classes = darkHeaderStyle();
@@ -45,7 +50,7 @@ export function DarkHeader(){
             </Nav>
             <Form inline className={classes.search}>
               <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-              <Button variant="outline-info">Search</Button>
+              <Button variant="contained"  className={classes.button}>Search</Button>
             </Form>
         </Navbar>
         // <Container>

@@ -1,0 +1,51 @@
+.userprivate--textField{
+    position: relative;
+    width: 100%;
+}
+
+.userprivate--input{
+
+    border: none;
+    box-sizing: border-box;
+    height: 2em;
+    position: absolute;
+    top: 1.2em;
+    left:1em;
+    outline: none;
+    width: calc(100% - 2em);
+    background-color: transparent;
+}
+
+.userprivate--field{
+    border:1px #cb0fed solid;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 4px;
+    width: 100%;
+    display: block;
+    height: 3.5em;
+
+}
+
+.userprivate--field > legend{
+    color: #cb0fed ;
+    font-size: 10px;
+    width: unset;
+    background-color: white;
+    padding:0.3em;
+    margin-left: 0.8em;
+    font-weight: 700;
+}
+
+input:focus + fieldset {
+    border: 1px solid purple;
+    border-left-width: 6px;
+}
+
+input:focus ~ legend{
+    color: purple;
+}
+
+input[type=text]:hover + fieldset{
+    border-color: purple;
+}

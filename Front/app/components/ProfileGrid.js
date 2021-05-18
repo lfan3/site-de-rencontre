@@ -9,7 +9,7 @@ const grid = (array) =>{
     let rows = []
 
     _.forEach(array, (val, index)=>{
-        if(index % 3 == 0){
+        if(index % 4 == 0){
             rows.push(row(array, index))
         }
     })
@@ -19,10 +19,10 @@ const grid = (array) =>{
 }
 
 const row = (array, i)=>{
-    const cols = _.slice(array, i, i+3)
+    const cols = _.slice(array, i, i+4)
 
     return(
-        <Grid.Row columns={3} key={i}>
+        <Grid.Row columns={4} key={i}>
         {
             columns(cols)
         }
@@ -39,7 +39,7 @@ const columns = (array) => {
               imageLink = {val.imageLink}
               name = {val.name}
               age = {val.age}
-              bio = {val.bio}
+              city = {val.city}
             />
             </Grid.Column>
         ))
