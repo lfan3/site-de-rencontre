@@ -15,6 +15,15 @@
 * Back: nodejs avec Express as framework
 * DB: Mysql
 
+## TOOLS
+### dotenv and .env
+* the config variable stocked in .env and we get access to them with dotenv.
+* one cavea is that when I start a script 'node createDB.js' in the direction of Back/config/, since there is no .env, so we do not have access to env varialbe. 
+* solution: start the command node from the direciton where stock the .env
+
+* the same problem can be happen for data/initData/dataSetup:
+* need to lancer le node depuis le root, as .env is in the root, and the relative path of dummydata is relative to the root too.
+
 ## Back detail explication:
 ### data direction:
 #### the fakeDatas creatation:
@@ -28,6 +37,7 @@
 #### api.js 
 * this fichier contains the Api functions to get data from DB and pass them to Back/router.js
 * BAApi_helpers.js: the Api fichier is too big, I try to seperate it.
+
 ### email:
 * use nodeMail to send mail. perhaps I can creat a more personalised email content?
 * user inscription get valided via email. and if someone liked the user, he can be informed per email.
@@ -39,14 +49,7 @@
 
 ### framework for font: bootstrap4 et jquery.
 
-### dotenv and .env
-* the config variable stocked in .env and we get access to them with dotenv.
-* one cavea is that when I start a script 'node createDB.js' in the direction of Back/config/, since there is no .env, so we do not have access to env varialbe. 
-* solution: start the command node from the direciton where stock the .env
-
-* the same problem can be happen for data/initData/dataSetup:
-* need to lancer le node depuis le root, as .env is in the root, and the relative path of dummydata is relative to the root too.
-
+## Learning note
 ### typescript part
 * description: inorder to use some design pattern and create clean code, I integrated typescript here.
 * nessessary packages: typescript, @types/express (for express)
@@ -78,40 +81,12 @@
 * mysql show databases;
 * mysql use yourDB;
 * exit / quite
-## the command below consite of once we have selected the db
+
+### the command below consite of once we have selected the db
 * show tables;
 * describe one_table;
 
-## to test the project:(work not finish yet)
-* you need to have the local mysql server. 
-* under both Front/Back direction to start the npm
 
-### todo
-* transfert les function dans router.js and api to service/new structure
-  * fusionner les villes et arrondissement avec le matcha.sql, importer le matcha data sql complete dans init
-* restructurer les routes et controllers, api
-* partie front
-  * le dark navbar doit encore modifier
-  * create the grill pour afficher les profiles
-  * pagination + store(
-    * store all the data in the global variable
-  )
-  * filter: 
-    • Un intervalle d’âge.
-    • Un intervalle de score de popularité.
-    • La localisation.
-    • Un ou plusieurs tags d’interêt.
-    la distance
-* creat node image resizing app
-* a voir la détaille par rapport a match priority
-* create base service by inspired from basecontroller write baseService error
-* routes: security(inscrire, loginIn), user(public, privé), match(voir les photos, filter), notification(), chat(fixe sur footer chaque page) 
-* authentification / do security controller
-* les modules commun de la part de front
-* getter and setter for entity:https://khalilstemmler.com/blogs/typescript/getters-and-setters/
-* tracer l architecture avec le schema
-* 
-* write my own {DropzoneDialog} 
-//drop database et reinitim gitpush
+
 
 
