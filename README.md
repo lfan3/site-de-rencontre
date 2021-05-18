@@ -1,5 +1,11 @@
 # This is a site de rencontre project.
 
+## Presentation
+This is the third time that I refactory the project. 
+In the FrontBackUp is the components that I did during my second refactory. I use Redux to manage the data.
+I did not finish my second try, because, I was focusing in mastering the React itself, so I did not really care about the UI.
+The porpos of the third try is to make nice UI and reuseful components, so I could even build a reusable frontend components libray 
+for myself.
 ## Architecture MVCS
 
 ## The main parts:
