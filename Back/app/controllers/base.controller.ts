@@ -21,7 +21,7 @@ export abstract class BaseController{
     }
 
     public clientError(res: express.Response, message?: string) {
-        return BaseController.jsonResponse(res, 401, message ? message : 'some Error from client side')
+        return BaseController.jsonResponse(res, 400, message ? message : 'bad request from client side')
     }
 
     public unauthorized(res : express.Response, message?: string){

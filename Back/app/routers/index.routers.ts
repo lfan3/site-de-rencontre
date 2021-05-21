@@ -10,4 +10,4 @@ RootRouter.use('/profile', ProfileRouter);
 RootRouter.use('/match', MatchRouter);
 
 
-export {RootRouter};
+module.exports = {RootRouter};

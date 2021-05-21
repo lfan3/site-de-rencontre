@@ -7,6 +7,60 @@ I did not finish my second try, because, I was focusing in mastering the React i
 The porpos of the third try is to make nice UI and reuseful components, so I could even build a reusable frontend components libray 
 for myself.
 ## Architecture MVCS
+* domaine driven design
+* impouvement later:
+  * some doutes: the relationship between the routes in frontend and backend, how to organised the two logic is better in my use case?
+  * for this moment, i kind of match the backend logic to the database table, I think i need to make more clear the distinction * * * between the service and the repository/model, and also tell the difference between routers in backend with service.
+* shema, with profile as example
+
+├── index.js
+│   └──> index.routers.js
+│           └──> profile.router.js
+|                    └──> index.controllers
+│                             └──> profile.controller
+│                                       └──> base.controller
+│                                       └──> index.services
+│                                               └──> profile.services
+|                                                       └──> base.services
+
+* routes schema:
+ 
+this page contrain all the roots of routes, which wildirected to the details roots of the main roots.
+the presentation of the roots schema is below:
+├───security.routes
+│   ├───inscrire
+|   ├───login In
+├───profile.routes (recherche/filter)
+│   ├───public
+|   ├───privée
+├───match.routes
+│   ├───profiles photos
+|   ├───filter
+├───notification.routes
+│   ├───*profiles photos
+|   ├───*filter
+    ├───*user.routes
+│   ├───*public
+|   ├───*privée
+├───chat.routes(fixe sur footer chaque page) 
+│   ├───*profiles photos
+|   ├───*filter
+*: not defined yet
+
+
+## API Structure:
+/
+/profile
+  └──> /profile/
+  └──> /profile/:userId
+          └──>POST profileController.fetchUserProfileByIdById
+/match
+  └──> /match/  
+          └──>GET matchController.fetchAllUsersPhotos
+  └──> /match/filterUsers
+          └──>POST matchController.filterUsers
+/notification
+/chat
 
 ## The main parts:
 * inscription and connexion

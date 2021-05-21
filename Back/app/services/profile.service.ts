@@ -9,7 +9,7 @@ export class ProfileService extends BaseService{
     //change assess privat or public
     //add interface to tags related functions
     
-    public async fetchUserProfile(userId : number, other : number){
+    public async fetchUserProfileById(userId : number, other : number){
         let promises = [
             this.getUserById(userId),
             //this.getUserTags(userId),
@@ -83,7 +83,7 @@ export class ProfileService extends BaseService{
         try{
             let tagIds = await this.getUserTagsIds(userId)
             if(Array.isArray(tagIds)){
-                let tags = Array<string>
+                let tags = [String]
                 if(!tagIds.length)
                     return this.notFound()  
             //tags = tagIds.map(await this.getUserTag);
