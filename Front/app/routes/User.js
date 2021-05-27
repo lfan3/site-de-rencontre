@@ -12,7 +12,7 @@ import {UserCard} from '../components/UserCard';
 
 
 const user = {
-        imageLink : './public/images/alice.png',
+        photo_path : './public/images/alice.png',
         name : 'Cloe',
         age : '33',
         city: 'Paris',
@@ -51,8 +51,10 @@ Chez World Courier, nous faisons avancer le progrès. Qu’il s’agisse de conc
 Chez World Courier, nous faisons avancer le progrès. Qu’il s’agisse de concevoir et de mettre en œuvre des processus logistiques de classe mondiale pour l’industrie bio-pharmaceutique ou de fournir un soutien logistique d’urgence à d’autres secteurs clés, nous avons acquis notre renommée grâce à une fiabilité éprouvée et une exécution parfaite depuis un demi-siècle";
 
 const tagContent = 'happy beach';
-export function User(){
+export function User(props){
     const classes = useStyle();
+    const userId = props.match.params.id;
+    //get user from data
     return(
         <div>
             <DarkHeader/>

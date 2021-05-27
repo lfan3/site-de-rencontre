@@ -36,9 +36,9 @@ const columns = (array) => {
         _.map(array, (val, i)=>(
             <Grid.Column key={uuidv4()}>
             <ProfileCard
-              imageLink = {val.imageLink}
+              photo_path = {val.photo_path}
               name = {val.name}
-              age = {val.age}
+              birthday= {val.birthday}
               city = {val.city}
             />
             </Grid.Column>

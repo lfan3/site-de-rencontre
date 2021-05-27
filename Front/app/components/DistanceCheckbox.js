@@ -5,7 +5,7 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {green} from '@material-ui/core/colors';
 
 
-export function Checkboxor() {
+export function DistanceCheckbox() {
     const [checked, setChecked] = React.useState(true);
   
     const handleChange = (event) => {
@@ -23,7 +23,7 @@ export function Checkboxor() {
             color='primary'
           />
         }
-        label="Primary"
+        label="over 200km"
         />
         </div>
     )

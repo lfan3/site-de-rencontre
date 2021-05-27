@@ -26,7 +26,7 @@ export const MatchSlider = withStyles({
  
     track: {
       height: 18,
-      borderRadius: 4,
+      borderRadius: 25,
     },
     rail: {
       height: 18,

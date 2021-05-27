@@ -4,7 +4,7 @@ import Pagination from '@material-ui/lab/Pagination';
 
 const pagiStyle = makeStyles((theme) => ({
     root: {
-      width: "200px", //need to change when I added more pages
+      width: "30rem", //need to change when I added more pages
       margin: "auto",
       marginTop: '2em',
     },
@@ -15,7 +15,7 @@ export function Pagi({handleChange, page}) {
 
     return (
       <div className= {classes.root}>
-        <Pagination count={2} page={page} onChange={handleChange} color='primary' size="large" />
+        <Pagination count={26} page={page} onChange={handleChange} color='primary' size="large" />
       </div>
     );
 }

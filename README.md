@@ -24,7 +24,6 @@ for myself.
 |                                                       └──> base.services
 
 * routes schema:
- 
 this page contrain all the roots of routes, which wildirected to the details roots of the main roots.
 the presentation of the roots schema is below:
 ├───security.routes
@@ -57,6 +56,13 @@ the presentation of the roots schema is below:
 /match
   └──> /match/  
           └──>GET matchController.fetchAllUsersPhotos
+              └──>match.service.fetchUsersWithPhotoBySex
+  └──> /match/men
+          └──>GET matchController.fetchAllMenPhotos (todo)
+              └──>match.service.fetchUsersWithPhotoBySex
+  └──> /match/women
+          └──>GET matchController.fetchAllWomenPhotos (todo)
+              └──>match.service.fetchUsersWithPhotoBySex
   └──> /match/filterUsers
           └──>POST matchController.filterUsers
 /notification
@@ -145,6 +151,10 @@ the presentation of the roots schema is below:
 ### the command below consite of once we have selected the db
 * show tables;
 * describe one_table;
+
+### commun error
+* 404 image react router dom link with parameter
+- solution: use <img src="/img/slots/banner.jpg" /> instead of <img src="./img/slots/banner.jpg" /> or <img src="img/slots/banner.jpg" />
 
 
 

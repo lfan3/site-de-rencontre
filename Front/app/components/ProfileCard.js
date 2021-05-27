@@ -1,17 +1,19 @@
 import React from 'react'
 import { Card, Icon, Image, Button } from 'semantic-ui-react'
-
+import Moment from 'react-moment'
 
 
 export const ProfileCard = (props) =>{
-    const {imageLink, name, age, city} = props
+    const {photo_path, name, birthday, city} = props;
+    const age = birthday;
     return (
      <Card>
-       <Image src={imageLink}  ui={false} wrapped />
+       <Image src={photo_path}  ui={false} wrapped />
        <Card.Content>
          <Card.Header>{name}</Card.Header>
          <Card.Meta>
-           <span className='date'>{age} years old</span>
+            
+           <span className='date'> <Moment diff={birthday} unit="years" decimal={false}>{Date.now()}</Moment> years old</span>
         </Card.Meta>
          <Card.Description>
            {city}

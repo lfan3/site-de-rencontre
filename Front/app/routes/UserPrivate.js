@@ -15,7 +15,7 @@ import { CustomeTextField } from '../components/CustomeTextField';
 import '../style/userPrivate.css';
 
 const _user = {
-        imageLink : './public/images/alice.png',
+        photo_path : './public/images/alice.png',
         name : 'Cloe',
         age : '33',
         city: 'Paris',

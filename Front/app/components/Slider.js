@@ -12,12 +12,10 @@ const sliderStyles = makeStyles((theme) => ({
 
 export function SimpleSlider(props) {
     const classes = sliderStyles();
-    const [value, setValue] = React.useState(props.range);
-    const {min, max, step} = props;
+    //const [value, setValue] = React.useState(props.range);
+    const {min, max, step, value, handleSliderChange} = props;
     const title = props.title.toUpperCase()
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
+
     return (
       <div className={classes.root}>
         <Typography id="discrete-slider-custom" gutterBottom>
@@ -30,7 +28,7 @@ export function SimpleSlider(props) {
           value = {value}
           min = {min}
           max = {max}
-          onChange = {handleChange}
+          onChange = {handleSliderChange}
         />
       </div>
     );

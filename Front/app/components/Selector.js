@@ -9,7 +9,7 @@ import _ from 'lodash'
 const selectorStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
+    minWidth: 240,
   },
 }));
 
@@ -18,25 +18,20 @@ const selectorStyles = makeStyles((theme) => ({
  * @param {*} props 
  * ex:  <Selector title='City' items = {['paris', 'londre']}/>
  */
-export const Selector = (props)=>{
+export const Selector = React.memo((props)=>{
     const classes = selectorStyles()
 
-    const [item, setItem] = React.useState('');
     const items = props.items;
     const title = props.title.toUpperCase();
-    const handleChange = (event) => {
-      setItem(event.target.value);
-    };
-   
+    const item = props.item;
+    console.log(item)
     return(
         <div>
         <FormControl className={classes.formControl}>
-          <InputLabel id="demo-controlled-open-select-label">{title}</InputLabel>
+          <InputLabel >{title}</InputLabel>
           <Select
-            labelId="demo-controlled-open-select-label"
-            id="demo-controlled-open-select"
             value={item}
-            onChange={handleChange}
+            onChange={props.handleChange}
           >
            <MenuItem value="">
               <em>None</em>
@@ -50,4 +45,7 @@ export const Selector = (props)=>{
         </FormControl>
       </div>
     )
-}
+}, (prevProps, nextProps)=>{
+  if(prevProps.item === nextProps.item)
+    return true;
+})

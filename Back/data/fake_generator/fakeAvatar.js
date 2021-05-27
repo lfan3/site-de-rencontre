@@ -2,7 +2,7 @@ const fs = require('fs')
 const menAva = JSON.parse(fs.readFileSync('./dummy_avatars_men.json'))
 const womenAva = JSON.parse(fs.readFileSync('./dummy_avatars_women.json'))
 
-function avatar_generator(){
+function avatar_generator_old(){
     let avatars = []
     let i = 0
     for(let j=0; j <menAva.length; j++){
@@ -19,4 +19,6 @@ function avatar_generator(){
     //console.log(data)
     fs.writeFileSync('./dummy_avatars_all.json', data)
 }
+
+
 //avatar_generator()

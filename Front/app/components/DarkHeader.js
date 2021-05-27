@@ -40,7 +40,7 @@ export function DarkHeader(){
     return (
         <Navbar className={classes.navBar} variant="dark">
             <Navbar.Brand href="#home">
-                <Image className={classes.logo} src='./public/images/logo.svg' fluid/>
+                <Image className={classes.logo} src='/public/images/logo.svg' fluid/>
           
             </Navbar.Brand>
             <Nav className="mr-auto">

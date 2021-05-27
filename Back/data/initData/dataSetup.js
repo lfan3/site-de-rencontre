@@ -1,7 +1,7 @@
 const {pool} = require('../../config/pool')
 const fs = require('fs')
 const users = JSON.parse(fs.readFileSync('./data/dummy_datas/dummy_user.json'))
-const photos = JSON.parse(fs.readFileSync('./data/dummy_datas/dummy_avatars_all.json'))
+const photos = JSON.parse(fs.readFileSync('./data/dummy_datas/dummy_avatars.json'))
 const logins = JSON.parse(fs.readFileSync('./data/dummy_datas/dummy_login.json'))
 const tags = JSON.parse(fs.readFileSync('./data/dummy_datas/dummy_tags.json'))
 const bioCourte = require('../dummy_datas/dummy_texts')
@@ -45,22 +45,22 @@ function photosQuery(){
         if(j==0){
             for(let i=0; i<len; i++){
                     //mistake : forget ' ' around ${}
-                query += `("${photos[i].photo_path}", ${photos[i].is_profile}, ${photos[i].user_id + 1}),`
+                query += `("${photos[i].photo_path}", ${photos[i].is_profile}, ${photos[i].user_id}),`
             }
         }
         else if(j==1){
             for(let i=0; i<len; i++){
                     //mistake : forget ' ' around ${}
-                query += `("${photos[i].photo_path}", ${photos[i].is_profile -1}, ${photos[i].user_id + 1}),`
+                query += `("${photos[i].photo_path}", ${photos[i].is_profile -1}, ${photos[i].user_id}),`
             }
         }
         else{
             for(let i=0; i<len; i++){
                 if(i < len -1){
                     //mistake : forget ' ' around ${}
-                    query += `("${photos[i].photo_path}", ${photos[i].is_profile -1}, ${photos[i].user_id + 1}),`
+                    query += `("${photos[i].photo_path}", ${photos[i].is_profile -1}, ${photos[i].user_id}),`
                 }else{
-                    query += `("${photos[i].photo_path}", ${photos[i].is_profile -1}, ${photos[i].user_id + 1})`
+                    query += `("${photos[i].photo_path}", ${photos[i].is_profile -1}, ${photos[i].user_id})`
                 }
             } 
         }
@@ -183,6 +183,7 @@ async function fillAllTables(){
 
 
 fill_photos_func(photosQuery());
+//console.log(photosQuery())
 //console.log(photosQuery())
 //to delete
 // function loginsQuery(){

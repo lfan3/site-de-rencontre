@@ -15,37 +15,37 @@ import {DropFile} from '../components/DropFile';
 
 const tileData = [
     {
-        img : './public/images/alice.png',
+        img : '/public/images/alice.png',
         title : 'Cloe',
         age : '33',
         bio : 'I am cloe'
     },
     {
-        img : './public/images/cloebig.jpg',
+        img : '/public/images/cloebig.jpg',
         title : 'Cloe',
         age : '33',
         bio : 'I am cloe'
     },
     {
-        img : './public/images/gille.jpg',
+        img : '/public/images/gille.jpg',
         title : 'Cloe',
         age : '33',
         bio : 'I am cloe'
     },
     {
-        img : './public/images/alice.png',
+        img : '/public/images/alice.png',
         title : 'Cloe',
         age : '33',
         bio : 'I am cloe'
     },
     {
-        img : './public/images/cloebig.jpg',
+        img : '/public/images/cloebig.jpg',
         title : 'Cloe',
         age : '33',
         bio : 'I am cloe'
     },
     {
-        img : './public/images/gille.jpg',
+        img : '/public/images/gille.jpg',
         title : 'Cloe',
         age : '33',
         bio : 'I am cloe'
@@ -144,6 +144,7 @@ export function UserPhotosGallery({edit = false}){
     const body = (
       <div style={modalStyle} className={classes.paper}>
         <img src={photos[photoIndex].img} />
+     
         <div className={classes.arrows}>
           <IconButton onClick={prevPhoto}>
             <ArrowBackIosIcon fontSize='large' color='primary' />
